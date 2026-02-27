@@ -1,6 +1,5 @@
-# PROJE ADI
+# DupePharma
 
-> **Not:** Bu bölüm proje adı ile güncellenmelidir.
 
 ---
 
