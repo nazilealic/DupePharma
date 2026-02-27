@@ -60,7 +60,7 @@
 
 # Gereksinim Dağılımları
 
-1. [Nazile Alıç Gereksinimleri](nazile-alic/nazile-alic-gereksinimler.md)
+1. [Nazile Alıç Gereksinimleri](nazile-alic/Nazile-Alic-Gereksinimler.md)
 2. [Şadiye Berra Özelgül Gereksinimleri](Sadiye-Berra-Ozelgul/Sadiye-Berra-Ozelgul-Gereksinimler.md)
 3. [Menekşe Nazik Gereksinimleri](menekse-nazik/menekse-nazik-gereksinimler.md)
 4. [Bahar Balım Gereksinimleri](bahar-balim/bahar-balim-gereksinimler.md)
