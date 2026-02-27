@@ -5,18 +5,20 @@
 
 ## Proje Hakkında
 
-![Ürün Tanıtım Görseli](Product.png)
+![Ürün Tanıtım Görseli](web.png)
 
 **Proje Tanımı:** 
-> Projenin ne iş yaptığını anlatan bir paragraflık tanıtım metni buraya yazılacaktır.
 
-**Örnek:** ASY isimli e-ticaret sitemiz, online alışveriş deneyimini kolay ve keyifli hale getirmek için tasarlandı. Geniş ürün yelpazemiz sayesinde müşterilerimize en iyi seçenekleri sunarken, kullanıcı dostu arayüzümüz ile de alışveriş yapmayı daha rahat hale getiriyoruz. Sitemizde yer alan ürünler, kaliteli ve güvenilir markaların en yeni ve trend ürünlerinden oluşuyor. Müşterilerimiz, aradıkları ürünleri hızlı ve kolay bir şekilde bulabilirken, aynı zamanda satın alma süreçlerinde de sorunsuz bir deneyim yaşayacaklar. Hızlı teslimat seçenekleri, güvenli ödeme sistemleri ve müşteri memnuniyetine önem veren satış sonrası hizmetlerimizle, ASY olarak müşterilerimizin beklentilerini en üst seviyede karşılamayı hedefliyoruz. Her zaman en iyi fiyatlarla, kaliteli ürünleri müşterilerimize sunmak için çalışıyoruz ve müşteri memnuniyeti bizim için her zaman önceliklidir. ASY e-ticaret sitemize hoş geldiniz, size hizmet vermek için sabırsızlanıyoruz.
+Eczane ve Kozmetik Muadil Sistemimiz, kullanıcıların sağlık ve kozmetik ürünlerine daha bilinçli ve kolay bir şekilde ulaşabilmesi için tasarlanmıştır. Platformumuz,
+eczane ürünleri hakkında içerik bilgileri sunarken, kozmetik ürünler için uygun fiyatlı muadil alternatifler önererek kullanıcıların karşılaştırma yapmasına olanak sağlar.
+
+Kullanıcı dostu arayüzümüz sayesinde ürün arama, içerik inceleme, favorilere ekleme ve yorum yapma işlemleri hızlı ve pratik bir şekilde gerçekleştirilebilir.Ayrıca 
+nöbetçi eczane yönlendirme özelliği ile kullanıcılar o haftaki nöbetçi eczane bilgisine kolayca ulaşabilir.
+
+Amacımız, güvenilir bilgi sunarak kullanıcıların doğru ürünü daha hızlı ve bilinçli bir şekilde seçmelerini sağlamaktır.
 
 **Proje Kategorisi:** 
-> Projenin hangi alanda yapıldığını belirten bir kategori. Örnek: E-Ticaret, Sosyal Medya vb.
-
-**Referans Uygulama:** 
-> [Örnek Referans Uygulama](https://example.com)
+Muadil Ürün Öneri ve Bilgi Sistemi
 
 ---
 
@@ -30,15 +32,13 @@
 ## Proje Ekibi
 
 **Grup Adı:** 
-> Belirlediğiniz grup adı buraya yazılacaktır.
+Joker
 
 **Ekip Üyeleri:** 
-- Ali Tutar
-- Veli Yılmaz
-- Selami Demir
-- Ayşe Kaya
-- Fatma Öztürk
-- Hayriye Şahin
+- Nazile Alıç
+- Şadiye Berra Özelgül
+- Menekşe Nazik
+- Bahar Balım
 
 ---
 
