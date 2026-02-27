@@ -13,6 +13,7 @@
 6- **Arama Geçmişini sil** (Nazile Alıç)
 
 7- **Cilt profili oluşturma** (Nazile Alıç)
+
 8- **Cilt profili güncelleme** (Nazile Alıç)
 
 9- **Kategori filtrelemesi** (Şadiye Berra Özelgül)
