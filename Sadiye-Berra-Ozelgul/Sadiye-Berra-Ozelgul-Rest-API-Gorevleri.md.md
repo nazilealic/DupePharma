@@ -1,4 +1,4 @@
-# DupePharma API — Kişisel API Metodları
+# Şadiye Berra Özelgül'ün Rest API Metodları
 
 **API Test Videosu:** __Link sonradan eklenecek__
 
