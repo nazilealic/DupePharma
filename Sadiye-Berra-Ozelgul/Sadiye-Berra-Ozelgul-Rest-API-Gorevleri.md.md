@@ -1,6 +1,6 @@
 # DupePharma API — Kişisel API Metodları
 
-**API Test Videosu:** __Link buraya eklenecek__
+**API Test Videosu:** __Link sonradan eklenecek__
 
 ---
 
