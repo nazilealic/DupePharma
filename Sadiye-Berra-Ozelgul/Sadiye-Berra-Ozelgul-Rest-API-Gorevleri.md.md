@@ -28,7 +28,7 @@ Authorization: Bearer {token}
       "name": "Cicaplast Baume B5",
       "brand": "La Roche-Posay",
       "category": "nemlendirici",
-      "price": 1000.00,
+      "price": 1049.90,
       "volume": "100 ml",
       "pricePerMl": 10.00,
       "averageRating": 4.5
