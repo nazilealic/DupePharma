@@ -8,8 +8,8 @@ info:
     bulabilmesi için tasarlanmış bir RESTful servistir. Temel CRUD işlemlerini destekler.
     API, JWT tabanlı kimlik doğrulama ile korunmaktadır.
   contact:
-    name: Proje Ekibi
-    email: proje@sdu.edu.tr
+    name: Joker
+    email: joker@sdu.edu.tr
 
 servers:
   - url: https://api.dupepharma.com/v1
