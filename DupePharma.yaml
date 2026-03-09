@@ -1,1 +1,1300 @@
+openapi: 3.0.3
+info:
+  title: Eczane ve Kozmetik Ürün API'si
+  version: 1.0.0
+  description: >
+    Bu API, kozmetik ve eczane ürünlerinin yönetimi, muadil ürünlerin listelenmesi,
+    fiyat karşılaştırması yapılması ve kullanıcıların cilt profiline uygun ürünleri
+    bulabilmesi için tasarlanmış bir RESTful servistir. Temel CRUD işlemlerini destekler.
+    API, JWT tabanlı kimlik doğrulama ile korunmaktadır.
+  contact:
+    name: Proje Ekibi
+    email: proje@sdu.edu.tr
 
+servers:
+  - url: https://api.dupepharma.com/v1
+    description: Üretim sunucusu (Production)
+  - url: https://staging-api.dupepharma.com/v1
+    description: Test sunucusu (Staging)
+  - url: http://localhost:3000/v1
+    description: Yerel geliştirme sunucusu (Development)
+
+tags:
+  - name: Auth
+    description: "Kullanıcı giriş, çıkış ve kayıt işlemleri (Menekşe Nazik / Bahar Balım)"
+  - name: Products
+    description: "Ürünlerin listelenmesi, arama, içerik ve filtreleme işlemleri (Nazile Alıç / Şadiye Berra Özelgül / Bahar Balım)"
+  - name: Alternatives
+    description: "Kozmetik ürünler için muadil ürünlerin listelenmesi ve fiyat karşılaştırması (Nazile Alıç)"
+  - name: SearchHistory
+    description: "Kullanıcının yaptığı aramaların geçmişini görüntüleme ve silme işlemleri (Nazile Alıç)"
+  - name: SkinProfile
+    description: "Kullanıcı cilt profili oluşturma ve güncelleme işlemleri (Nazile Alıç)"
+  - name: Favorites
+    description: "Favori ürün ekleme, çıkarma ve listeleme (Şadiye Berra Özelgül)"
+  - name: Pharmacies
+    description: "Nöbetçi eczane listesi görüntüleme ve düzenleme (Şadiye Berra Özelgül)"
+  - name: Reviews
+    description: "Ürünlere yorum ekleme, güncelleme, silme ve listeleme; ürün puanlama (Menekşe Nazik)"
+  - name: Admin
+    description: "Admin paneli üzerinden ürün yönetimi ve yapay zeka analizi (Bahar Balım)"
+
+security:
+  - BearerAuth: []
+
+paths:
+
+  # ──────────────────────────────────────────────
+  # AUTH — Menekşe Nazik & Bahar Balım
+  # ──────────────────────────────────────────────
+
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: "Üye Ol (Bahar Balım) — Gereksinim #23"
+      description: Sisteme yeni kullanıcı kaydı oluşturur.
+      operationId: registerUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        "201":
+          description: Kullanıcı başarıyla oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "409":
+          description: E-posta adresi zaten kullanımda
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: "Kullanıcı Girişi (Menekşe Nazik) — Gereksinim #21"
+      description: E-posta ve şifre ile giriş yapar, JWT token döner.
+      operationId: loginUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginCredentials'
+      responses:
+        "200":
+          description: Giriş başarılı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: "Kullanıcı Çıkışı (Menekşe Nazik) — Gereksinim #22"
+      description: Mevcut JWT token'ı geçersiz kılar ve oturumu sonlandırır.
+      operationId: logoutUser
+      responses:
+        "204":
+          description: Çıkış başarılı
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/password-reset:
+    post:
+      tags:
+        - Auth
+      summary: "Şifre Yenileme (Bahar Balım) — Gereksinim #24"
+      description: Kullanıcının e-postasına şifre sıfırlama bağlantısı gönderir veya yeni şifre belirler.
+      operationId: resetPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordReset'
+      responses:
+        "200":
+          description: Şifre sıfırlama e-postası gönderildi veya şifre güncellendi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Şifre sıfırlama bağlantısı e-posta adresinize gönderildi."
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────
+  # PRODUCTS — Nazile Alıç / Şadiye Berra Özelgül / Bahar Balım
+  # ──────────────────────────────────────────────
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: "Ürünleri Listele (Nazile Alıç) — Gereksinim #1"
+      description: Tüm ürünleri listeler. Kategori ve fiyat aralığına göre filtreleme de desteklenir (Gereksinim #9, #10).
+      operationId: listProducts
+      parameters:
+        - name: category
+          in: query
+          description: "Filtrelenecek kategori adı (Şadiye Berra Özelgül — Gereksinim #9)"
+          schema:
+            type: string
+            example: "nemlendirici"
+        - name: minPrice
+          in: query
+          description: "Minimum fiyat filtresi (Şadiye Berra Özelgül — Gereksinim #10)"
+          schema:
+            type: number
+            example: 50
+        - name: maxPrice
+          in: query
+          description: "Maksimum fiyat filtresi (Şadiye Berra Özelgül — Gereksinim #10)"
+          schema:
+            type: number
+            example: 500
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        "200":
+          description: Ürün listesi başarıyla getirildi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductList'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /products/search:
+    get:
+      tags:
+        - Products
+      summary: "Ürün Araması Yap (Nazile Alıç) — Gereksinim #4"
+      description: Ürün adı veya markaya göre arama yapar.
+      operationId: searchProducts
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: Ürün adı veya markaya göre arama anahtar kelimesi
+          schema:
+            type: string
+          example: "La Roche Posay"
+      responses:
+        "200":
+          description: Arama sonuçları başarıyla listelendi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          description: Arama sonucunda ürün bulunamadı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /products/{productId}:
+    parameters:
+      - $ref: '#/components/parameters/ProductIdParam'
+    get:
+      tags:
+        - Products
+      summary: "Ürün İçerik Bilgilerini Görüntüle (Bahar Balım) — Gereksinim #29"
+      description: Belirli bir ürünün tüm detay ve içerik bilgilerini getirir.
+      operationId: getProductById
+      responses:
+        "200":
+          description: Ürün detayı başarıyla getirildi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Admin
+      summary: "Admin — Ürün Düzenle (Bahar Balım) — Gereksinim #26"
+      description: Admin, mevcut bir ürünün bilgilerini günceller.
+      operationId: updateProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpsert'
+      responses:
+        "200":
+          description: Ürün başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Admin
+      summary: "Admin — Ürün Sil (Bahar Balım) — Gereksinim #27"
+      description: Admin, bir ürünü sistemden siler.
+      operationId: deleteProduct
+      responses:
+        "204":
+          description: Ürün başarıyla silindi
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /admin/products:
+    post:
+      tags:
+        - Admin
+      summary: "Admin — Ürün Ekle (Bahar Balım) — Gereksinim #25"
+      description: Admin paneli üzerinden sisteme yeni ürün ekler.
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductUpsert'
+      responses:
+        "201":
+          description: Ürün başarıyla eklendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+
+
+
+  # ──────────────────────────────────────────────
+  # ALTERNATIVES — Nazile Alıç
+  # ──────────────────────────────────────────────
+
+  /products/{productId}/alternatives:
+    parameters:
+      - $ref: '#/components/parameters/ProductIdParam'
+    get:
+      tags:
+        - Alternatives
+      summary: "Muadil Ürünleri Listele (Nazile Alıç) — Gereksinim #2"
+      description: Bir kozmetik ürün için muadil ürünleri listeler.
+      operationId: listProductAlternatives
+      responses:
+        "200":
+          description: Muadil ürünler başarıyla listelendi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/price-comparison:
+    parameters:
+      - $ref: '#/components/parameters/ProductIdParam'
+    get:
+      tags:
+        - Alternatives
+      summary: "Muadiller İçin Fiyat Karşılaştırması (Nazile Alıç) — Gereksinim #3"
+      description: Ürün ve muadillerinin fiyat karşılaştırmasını döndürür.
+      operationId: compareProductPrices
+      responses:
+        "200":
+          description: Fiyat karşılaştırması başarıyla getirildi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PriceComparison'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/ai-analysis:
+    parameters:
+      - $ref: '#/components/parameters/ProductIdParam'
+    get:
+      tags:
+        - Alternatives
+      summary: "Yapay Zeka ile Ürün ve Muadil Analizi (Bahar Balım) — Gereksinim #28"
+      description: >
+        Belirtilen ürün için yapay zeka destekli içerik analizi ve muadil karşılaştırması döndürür.
+        Orijinal ürün ile muadilleri arasındaki aktif içerik benzerliği, güvenlik skoru ve
+        mililitre başına fiyat karşılaştırması içerir.
+      operationId: getAIProductAnalysis
+      responses:
+        "200":
+          description: Yapay zeka analizi başarıyla tamamlandı
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIAnalysisReport'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────
+  # SEARCH HISTORY — Nazile Alıç
+  # ──────────────────────────────────────────────
+
+  /users/{userId}/search-history:
+    parameters:
+      - $ref: '#/components/parameters/UserIdParam'
+    get:
+      tags:
+        - SearchHistory
+      summary: "Arama Geçmişini Görüntüle (Nazile Alıç) — Gereksinim #5"
+      description: Kullanıcının geçmiş aramalarını listeler.
+      operationId: getUserSearchHistory
+      responses:
+        "200":
+          description: Arama geçmişi başarıyla getirildi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SearchHistoryEntry'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - SearchHistory
+      summary: "Arama Geçmişini Sil (Nazile Alıç) — Gereksinim #6"
+      description: Kullanıcının tüm arama geçmişini siler.
+      operationId: deleteUserSearchHistory
+      responses:
+        "204":
+          description: Arama geçmişi başarıyla silindi
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────
+  # SKIN PROFILE — Nazile Alıç
+  # ──────────────────────────────────────────────
+
+  /users/{userId}/skin-profile:
+    parameters:
+      - $ref: '#/components/parameters/UserIdParam'
+    post:
+      tags:
+        - SkinProfile
+      summary: "Cilt Profili Oluştur (Nazile Alıç) — Gereksinim #7"
+      description: Kullanıcı için yeni bir cilt profili oluşturur.
+      operationId: createSkinProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkinProfileInput'
+      responses:
+        "201":
+          description: Cilt profili başarıyla oluşturuldu
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkinProfile'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+    put:
+      tags:
+        - SkinProfile
+      summary: "Cilt Profili Güncelle (Nazile Alıç) — Gereksinim #8"
+      description: Kullanıcının mevcut cilt profilini günceller.
+      operationId: updateSkinProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkinProfileInput'
+      responses:
+        "200":
+          description: Cilt profili başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SkinProfile'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────
+  # FAVORITES — Şadiye Berra Özelgül
+  # ──────────────────────────────────────────────
+
+  /users/{userId}/favorites:
+    parameters:
+      - $ref: '#/components/parameters/UserIdParam'
+    get:
+      tags:
+        - Favorites
+      summary: "Favorileri Listele (Şadiye Berra Özelgül) — Gereksinim #13"
+      description: Kullanıcının favori ürünlerini listeler.
+      operationId: listFavorites
+      responses:
+        "200":
+          description: Favori ürünler başarıyla listelendi
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+    post:
+      tags:
+        - Favorites
+      summary: "Favorilere Ekle (Şadiye Berra Özelgül) — Gereksinim #11"
+      description: Bir ürünü kullanıcının favorilerine ekler.
+      operationId: addFavorite
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - productId
+              properties:
+                productId:
+                  type: string
+                  example: "p101"
+      responses:
+        "201":
+          description: Ürün favorilere eklendi
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "409":
+          description: Ürün zaten favorilerde mevcut
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{userId}/favorites/{productId}:
+    parameters:
+      - $ref: '#/components/parameters/UserIdParam'
+      - $ref: '#/components/parameters/ProductIdParam'
+    delete:
+      tags:
+        - Favorites
+      summary: "Favorilerden Çıkar (Şadiye Berra Özelgül) — Gereksinim #12"
+      description: Bir ürünü kullanıcının favorilerinden çıkarır.
+      operationId: removeFavorite
+      responses:
+        "204":
+          description: Ürün favorilerden başarıyla çıkarıldı
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  # ──────────────────────────────────────────────
+  # PHARMACIES — Şadiye Berra Özelgül
+  # ──────────────────────────────────────────────
+
+  /pharmacies/on-duty/image:
+    get:
+      tags:
+        - Pharmacies
+      summary: "Nöbetçi Eczane Listesini Görüntüle (Şadiye Berra Özelgül) — Gereksinim #15"
+      description: Sistemde yüklü olan güncel nöbetçi eczane listesi görselinin URL'ini döndürür.
+      operationId: getOnDutyPharmacyImage
+      security: []
+      responses:
+        "200":
+          description: Görsel URL başarıyla getirildi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  imageUrl:
+                    type: string
+                    format: uri
+                    example: "https://api.dupepharma.com/uploads/nobetci-eczane.jpg"
+                  updatedAt:
+                    type: string
+                    format: date-time
+        "404":
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Pharmacies
+      summary: "Nöbetçi Eczane Listesini Düzenle (Şadiye Berra Özelgül) — Gereksinim #14"
+      description: Yalnızca admin, nöbetçi eczane listesi görselini günceller.
+      operationId: updateOnDutyPharmacyImage
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - pharmacyListImage
+              properties:
+                pharmacyListImage:
+                  type: string
+                  format: binary
+                  description: Yüklenecek eczane listesi görsel dosyası
+      responses:
+        "200":
+          description: Görsel başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Görsel başarıyla yüklendi."
+                  imageUrl:
+                    type: string
+                    format: uri
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+
+  # ──────────────────────────────────────────────
+  # REVIEWS — Menekşe Nazik
+  # ──────────────────────────────────────────────
+
+  /products/{productId}/reviews:
+    parameters:
+      - $ref: '#/components/parameters/ProductIdParam'
+    get:
+      tags:
+        - Reviews
+      summary: "Yorumları Listele (Menekşe Nazik) — Gereksinim #18"
+      description: Belirli bir ürüne ait tüm kullanıcı yorumlarını listeler.
+      operationId: listReviews
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        "200":
+          description: Yorumlar başarıyla listelendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewList'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+        - Reviews
+      summary: "Yorum Ekle (Menekşe Nazik) — Gereksinim #16"
+      description: Giriş yapmış kullanıcı, bir ürüne yorum ve puan ekler.
+      operationId: createReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+      responses:
+        "201":
+          description: Yorum başarıyla eklendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "409":
+          description: Kullanıcı bu ürüne zaten yorum yapmış
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /products/{productId}/reviews/{reviewId}:
+    parameters:
+      - $ref: '#/components/parameters/ProductIdParam'
+      - $ref: '#/components/parameters/ReviewIdParam'
+    put:
+      tags:
+        - Reviews
+      summary: "Yorumu Güncelle (Menekşe Nazik) — Gereksinim #19"
+      description: Kullanıcı kendi yorumunu günceller.
+      operationId: updateReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewInput'
+      responses:
+        "200":
+          description: Yorum başarıyla güncellendi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Reviews
+      summary: "Yorum Sil (Menekşe Nazik) — Gereksinim #17"
+      description: Kullanıcı kendi yorumunu siler; admin tüm yorumları silebilir.
+      operationId: deleteReview
+      responses:
+        "204":
+          description: Yorum başarıyla silindi
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "403":
+          $ref: '#/components/responses/Forbidden'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /products/{productId}/ratings:
+    parameters:
+      - $ref: '#/components/parameters/ProductIdParam'
+    post:
+      tags:
+        - Reviews
+      summary: "Ürünü Puanla (Menekşe Nazik) — Gereksinim #20"
+      description: Kullanıcı bir ürüne 1-5 arasında puan verir (yorum zorunlu değil).
+      operationId: rateProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RatingInput'
+      responses:
+        "200":
+          description: Puan başarıyla kaydedildi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RatingResult'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: "JWT token ile kimlik doğrulama. Header formati — Authorization: Bearer {token}"
+
+  parameters:
+    UserIdParam:
+      name: userId
+      in: path
+      required: true
+      description: Kullanıcının benzersiz kimlik numarası
+      schema:
+        type: string
+      example: "u101"
+    ProductIdParam:
+      name: productId
+      in: path
+      required: true
+      description: Ürünün benzersiz kimlik numarası
+      schema:
+        type: string
+      example: "p101"
+    ReviewIdParam:
+      name: reviewId
+      in: path
+      required: true
+      description: Yorumun benzersiz kimlik numarası
+      schema:
+        type: string
+      example: "r201"
+    PageParam:
+      name: page
+      in: query
+      description: Sayfa numarası (1'den başlar)
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      name: limit
+      in: query
+      description: Sayfa başına kayıt sayısı
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+  schemas:
+
+    # ── AUTH ──
+
+    UserRegistration:
+      type: object
+      required:
+        - email
+        - password
+        - fullName
+      properties:
+        email:
+          type: string
+          format: email
+          example: "bahar@example.com"
+        password:
+          type: string
+          format: password
+          minLength: 8
+          example: "P@ssword123"
+        fullName:
+          type: string
+          minLength: 3
+          example: "Bahar Balım"
+
+    LoginCredentials:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+
+    AuthToken:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        expiresIn:
+          type: integer
+          example: 3600
+        user:
+          $ref: '#/components/schemas/User'
+
+    PasswordReset:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          example: "kullanici@example.com"
+        newPassword:
+          type: string
+          format: password
+          minLength: 8
+          description: Sıfırlama token'ı doğrulandıktan sonra yeni şifre belirlenir.
+        resetToken:
+          type: string
+          description: E-posta ile gönderilen sıfırlama token'ı.
+
+    # ── USER ──
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "u101"
+        email:
+          type: string
+          format: email
+          example: "bahar@example.com"
+        fullName:
+          type: string
+          example: "Bahar Balım"
+        createdAt:
+          type: string
+          format: date-time
+
+    # ── PRODUCT ──
+
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "p101"
+        name:
+          type: string
+          example: "Cicaplast Baume B5"
+        brand:
+          type: string
+          example: "La Roche-Posay"
+        category:
+          type: string
+          example: "nemlendirici"
+        price:
+          type: number
+          format: float
+          example: 1049.90
+        averageRating:
+          type: number
+          format: float
+          example: 4.5
+
+    ProductDetail:
+      allOf:
+        - $ref: '#/components/schemas/Product'
+        - type: object
+          properties:
+            description:
+              type: string
+              example: "Hassas ciltler için yatıştırıcı balm."
+            ingredients:
+              type: array
+              items:
+                type: string
+              example: ["Aqua", "Glycerin", "Niacinamide", "Panthenol"]
+            usageInstructions:
+              type: string
+              example: "Temizlenmiş cilde ince bir tabaka olarak uygulayın."
+            volume:
+              type: string
+              example: "100 ml"
+            imageUrl:
+              type: string
+              format: uri
+              example: "https://api.dupepharma.com/images/cicaplast.jpg"
+
+    ProductUpsert:
+      type: object
+      required:
+        - name
+        - brand
+        - category
+        - price
+      properties:
+        name:
+          type: string
+          example: "Cicaplast Baume B5"
+        brand:
+          type: string
+          example: "La Roche-Posay"
+        category:
+          type: string
+          example: "nemlendirici"
+        price:
+          type: number
+          format: float
+          example: 1049.90
+        description:
+          type: string
+        ingredients:
+          type: array
+          items:
+            type: string
+        usageInstructions:
+          type: string
+        volume:
+          type: string
+        imageUrl:
+          type: string
+          format: uri
+
+    ProductList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    # ── ALTERNATIVES ──
+
+    PriceComparison:
+      type: object
+      description: >
+        Fiyat karşılaştırması listesi hem orijinal ürünü (isOriginal: true) hem de
+        muadil ürünleri (isOriginal: false) içerir. Böylece kullanıcı tek bir yanıtta
+        tüm seçenekleri mililitre başına fiyatlarıyla karşılaştırabilir.
+      properties:
+        productId:
+          type: string
+          example: "p102"
+        productName:
+          type: string
+          example: "Cicabio Cream"
+        brand:
+          type: string
+          example: "Bioderma"
+        price:
+          type: number
+          format: float
+          example: 643.00
+        volume:
+          type: string
+          example: "200 ml"
+        pricePerMl:
+          type: number
+          format: float
+          example: 3.22
+          description: Mililitre başına fiyat (TL/ml) — muadil karşılaştırması için
+        similarityScore:
+          type: number
+          minimum: 0
+          maximum: 1
+          example: 0.87
+          description: Orijinal ürünle aktif içerik benzerlik skoru (0-1)
+        matchedIngredients:
+          type: array
+          items:
+            type: string
+          example: ["Panthenol", "Madecassoside"]
+          description: Orijinal ürünle ortak aktif içerikler
+        isOriginal:
+          type: boolean
+          description: Bu ürün orijinal mi yoksa muadil mi olduğunu belirtir.
+          example: false
+
+    # ── SEARCH HISTORY ──
+
+    SearchHistoryEntry:
+      type: object
+      properties:
+        query:
+          type: string
+          example: "La Roche Posay"
+        searchedOn:
+          type: string
+          format: date-time
+          example: "2026-03-07T10:15:00Z"
+
+    # ── SKIN PROFILE ──
+
+    SkinProfileInput:
+      type: object
+      required:
+        - skinType
+      properties:
+        skinType:
+          type: string
+          enum: [yağlı, kuru, karma, normal, hassas]
+          example: "yağlı"
+        sensitivity:
+          type: boolean
+          example: false
+        skinProblems:
+          type: array
+          items:
+            type: string
+          example: ["akne", "kızarıklık"]
+
+    SkinProfile:
+      allOf:
+        - type: object
+          properties:
+            userId:
+              type: string
+              example: "u101"
+        - $ref: '#/components/schemas/SkinProfileInput'
+
+    # ── REVIEWS ──
+
+    ReviewInput:
+      type: object
+      required:
+        - rating
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 4
+          description: "1 ile 5 arasında puan (Gereksinim #20 ile örtüşür)"
+        comment:
+          type: string
+          maxLength: 1000
+          example: "Cildime çok iyi geldi, kesinlikle tavsiye ederim."
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "r201"
+        productId:
+          type: string
+          example: "p101"
+        userId:
+          type: string
+          example: "u101"
+        userName:
+          type: string
+          example: "Bahar B."
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 4
+        comment:
+          type: string
+          example: "Cildime çok iyi geldi."
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ReviewList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+        averageRating:
+          type: number
+          format: float
+          example: 4.3
+        totalReviews:
+          type: integer
+          example: 48
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    RatingInput:
+      type: object
+      required:
+        - rating
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+
+    RatingResult:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "p101"
+        userRating:
+          type: integer
+          example: 5
+        newAverageRating:
+          type: number
+          format: float
+          example: 4.4
+        totalRatings:
+          type: integer
+          example: 120
+
+    # ── AI ANALYSIS ──
+
+    AIAnalysisReport:
+      type: object
+      properties:
+        productId:
+          type: string
+          example: "p102"
+        productName:
+          type: string
+          example: "Cicabio Cream"
+        brand:
+          type: string
+          example: "Bioderma"
+        safetyScore:
+          type: integer
+          minimum: 0
+          maximum: 100
+          example: 89
+          description: İçerik güvenlik puanı (0-100)
+        suitableForSkinTypes:
+          type: array
+          items:
+            type: string
+          example: ["hassas", "kuru", "karma"]
+        flaggedIngredients:
+          type: array
+          items:
+            type: object
+            properties:
+              ingredient:
+                type: string
+                example: "Phenoxyethanol"
+              reason:
+                type: string
+                example: "Yüksek konsantrasyonda tahriş potansiyeli olan koruyucu"
+        recommendation:
+          type: string
+          enum: [ÖNERILIR, DİKKATLİ_KULLANIN, ÖNERİLMEZ]
+          example: "ÖNERILIR"
+        analysisText:
+          type: string
+          example: "Cicaplast Baume B5 (1000 TL / 100 ml = 10 TL/ml) ile benzer aktif içeriklere (Panthenol, Madecassoside) sahip muadil bir üründür. Bioderma Cicabio Cream 200 ml 643 TL (3.22 TL/ml) fiyatıyla mililitre başına %68 daha uygun maliyetlidir. Hassas ve kuru ciltler için uygundur."
+        analyzedAt:
+          type: string
+          format: date-time
+
+    # ── COMMON ──
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 20
+        totalItems:
+          type: integer
+          example: 45
+        totalPages:
+          type: integer
+          example: 3
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "İstenen kaynak bulunamadı."
+
+  responses:
+    BadRequest:
+      description: Geçersiz istek veya eksik parametreler
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: "İstek parametreleri geçersiz."
+    Unauthorized:
+      description: Kimlik doğrulama başarısız veya token süresi dolmuş
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 401
+            message: "Kimlik doğrulama başarısız. Lütfen tekrar giriş yapın."
+    Forbidden:
+      description: Bu işlem için yetkiniz bulunmamaktadır
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 403
+            message: "Bu işlem için Admin yetkisi gereklidir."
+    NotFound:
+      description: İstenen kaynak bulunamadı
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: "İstenen kaynak bulunamadı."
