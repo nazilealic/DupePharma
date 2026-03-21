@@ -129,9 +129,72 @@ app.get("/products/:id/price-comparison", async (req, res) => {
   }
 });
 
+// ürün arama ve kullanıcı arama geçmişi kaydetme
+app.get("/products/search", async (req, res) => {
+  try {
+    const { query, userId } = req.query;
+    if (!query) return res.status(400).json({ message: "Arama kelimesi boş olamaz" });
+
+    const results = await Product.find({
+      $or: [
+        { name: { $regex: query, $options: "i" } },
+        { brand: { $regex: query, $options: "i" } }
+      ]
+    });
+
+    if (userId) {
+      try {
+        let user = await User.findById(userId);
+        if (!user) user = await User.findOne({ _id: userId });
+        if (user) {
+          user.searchHistory.push(query);
+          await user.save();
+        }
+      } catch (err) {
+        console.warn("User history kaydedilemedi:", err.message);
+      }
+    }
+
+    res.json(results);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// arama geçmişi görüntüleme
+app.get("/users/:userId/search-history", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    let user = await User.findById(userId);
+    if (!user) user = await User.findOne({ _id: userId });
+    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+    res.json(user.searchHistory);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// arama geçmişi silme
+app.delete("/users/:userId/search-history", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    let user = await User.findById(userId);
+    if (!user) user = await User.findOne({ _id: userId });
+    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+
+    user.searchHistory = [];
+    await user.save();
+    res.json({ message: "Arama geçmişi silindi" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 // Server başlat
-// ------------------------
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server çalışıyor: http://localhost:${PORT}`);
