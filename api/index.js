@@ -83,8 +83,8 @@ app.get("/products/:id/alternatives", async (req, res) => {
   }
 });
 
-// GET /products/:id/price-comparison → fiyat karşılaştırma
-app.get("/products/:id/price-comparison", async (req, res) => {
+// GET /products/:id/alternatives → muadil ürünleri listele
+app.get("/products/:id/alternatives", async (req, res) => {
   try {
     const { id } = req.params;
     const product = await Product.findById(id);
@@ -96,149 +96,13 @@ app.get("/products/:id/price-comparison", async (req, res) => {
       ingredients: { $in: product.ingredients }
     });
 
-    const comparison = [
-      { name: product.name, brand: product.brand, price: product.price, isOriginal: true },
-      ...alternatives.map(a => ({ name: a.name, brand: a.brand, price: a.price, isOriginal: false }))
-    ];
-
-    comparison.sort((a, b) => a.price - b.price);
-    res.json(comparison);
+    res.json(alternatives);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ------------------------
-// ARAMA & GEÇMİŞ
-// ------------------------
-
-// Arama ve history kaydetme
-app.get("/products/search", async (req, res) => {
-  try {
-    const { query, userId } = req.query;
-    if (!query) return res.status(400).json({ message: "Arama kelimesi boş olamaz" });
-
-    const results = await Product.find({
-      $or: [
-        { name: { $regex: query, $options: "i" } },
-        { brand: { $regex: query, $options: "i" } }
-      ]
-    });
-
-    if (userId) {
-      try {
-        let user = await User.findById(userId);
-        if (!user) user = await User.findOne({ _id: userId });
-        if (user) {
-          user.searchHistory.push(query);
-          await user.save();
-        }
-      } catch (err) {
-        console.warn("User history kaydedilemedi:", err.message);
-      }
-    }
-
-    res.json(results);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Search history görüntüleme
-app.get("/users/:userId/search-history", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    let user = await User.findById(userId);
-    if (!user) user = await User.findOne({ _id: userId });
-    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-    res.json(user.searchHistory);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Search history silme
-app.delete("/users/:userId/search-history", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    let user = await User.findById(userId);
-    if (!user) user = await User.findOne({ _id: userId });
-    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-
-    user.searchHistory = [];
-    await user.save();
-    res.json({ message: "Arama geçmişi silindi" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ------------------------
-// CİLT PROFİLİ
-// ------------------------
-
-// Oluşturma
-app.post("/users/:userId/skin-profile", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { skinType, sensitivity, concerns } = req.body;
-
-    let user = await User.findById(userId);
-    if (!user) user = await User.findOne({ _id: userId });
-    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-
-    user.skinProfile = { skinType, sensitivity, concerns };
-    await user.save();
-
-    res.json({ message: "Cilt profili oluşturuldu", skinProfile: user.skinProfile });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Güncelleme
-app.put("/users/:userId/skin-profile", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { skinType, sensitivity, concerns } = req.body;
-
-    let user = await User.findById(userId);
-    if (!user) user = await User.findOne({ _id: userId });
-    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-
-    user.skinProfile = { skinType, sensitivity, concerns };
-    await user.save();
-
-    res.json({ message: "Cilt profili güncellendi", skinProfile: user.skinProfile });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Görüntüleme
-app.get("/users/:userId/skin-profile", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    let user = await User.findById(userId);
-    if (!user) user = await User.findOne({ _id: userId });
-    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-
-    if (!user.skinProfile) return res.status(404).json({ message: "Cilt profili bulunamadı" });
-
-    res.json(user.skinProfile);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ------------------------
 // Server başlat
 // ------------------------
 const PORT = 3000;
