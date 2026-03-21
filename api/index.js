@@ -25,6 +25,8 @@ app.use('/v1/products', require('./routes/reviews'));
 
 app.use('/v1/admin', require('./routes/admin'));
 
+app.use('/v1/ai', require('./routes/ai'));
+
 app.get('/', (req, res) => {
   res.json({ message: 'DupePharma API çalışıyor 🚀', version: '1.0.0' });
 });
