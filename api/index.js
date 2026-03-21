@@ -83,26 +83,6 @@ app.get("/products/:id/alternatives", async (req, res) => {
   }
 });
 
-// GET /products/:id/alternatives → muadil ürünleri listele
-app.get("/products/:id/alternatives", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const product = await Product.findById(id);
-    if (!product) return res.status(404).json({ message: "Ürün bulunamadı" });
-
-    const alternatives = await Product.find({
-      category: product.category,
-      _id: { $ne: product._id },
-      ingredients: { $in: product.ingredients }
-    });
-
-    res.json(alternatives);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // GET /products/:id/price-comparison → fiyat karşılaştırma
 app.get("/products/:id/price-comparison", async (req, res) => {
   try {
@@ -129,7 +109,10 @@ app.get("/products/:id/price-comparison", async (req, res) => {
   }
 });
 
-// ürün arama ve kullanıcı arama geçmişi kaydetme
+
+// ARAMA & GEÇMİŞ İŞLEMLERİ
+
+// Arama ve history kaydetme
 app.get("/products/search", async (req, res) => {
   try {
     const { query, userId } = req.query;
@@ -162,7 +145,7 @@ app.get("/products/search", async (req, res) => {
   }
 });
 
-// arama geçmişi görüntüleme
+// Arama geçmişi görüntüleme
 app.get("/users/:userId/search-history", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -176,7 +159,7 @@ app.get("/users/:userId/search-history", async (req, res) => {
   }
 });
 
-// arama geçmişi silme
+// Arama geçmişi silme
 app.delete("/users/:userId/search-history", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -193,6 +176,65 @@ app.delete("/users/:userId/search-history", async (req, res) => {
   }
 });
 
+
+//CİLT PROFİLİ İŞLEMLERİ
+
+// Cilt Profili Oluşturma
+app.post("/users/:userId/skin-profile", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { skinType, sensitivity, concerns } = req.body;
+
+    let user = await User.findById(userId);
+    if (!user) user = await User.findOne({ _id: userId });
+    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+
+    user.skinProfile = { skinType, sensitivity, concerns };
+    await user.save();
+
+    res.json({ message: "Cilt profili oluşturuldu", skinProfile: user.skinProfile });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Cilt Profili Güncelleme
+app.put("/users/:userId/skin-profile", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { skinType, sensitivity, concerns } = req.body;
+
+    let user = await User.findById(userId);
+    if (!user) user = await User.findOne({ _id: userId });
+    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+
+    user.skinProfile = { skinType, sensitivity, concerns };
+    await user.save();
+
+    res.json({ message: "Cilt profili güncellendi", skinProfile: user.skinProfile });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Cilt Profili Görüntüleme
+app.get("/users/:userId/skin-profile", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    let user = await User.findById(userId);
+    if (!user) user = await User.findOne({ _id: userId });
+    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+
+    if (!user.skinProfile) return res.status(404).json({ message: "Cilt profili bulunamadı" });
+
+    res.json(user.skinProfile);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // Server başlat
 const PORT = 3000;
