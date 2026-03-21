@@ -103,6 +103,33 @@ app.get("/products/:id/alternatives", async (req, res) => {
   }
 });
 
+// GET /products/:id/price-comparison → fiyat karşılaştırma
+app.get("/products/:id/price-comparison", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (!product) return res.status(404).json({ message: "Ürün bulunamadı" });
+
+    const alternatives = await Product.find({
+      category: product.category,
+      _id: { $ne: product._id },
+      ingredients: { $in: product.ingredients }
+    });
+
+    const comparison = [
+      { name: product.name, brand: product.brand, price: product.price, isOriginal: true },
+      ...alternatives.map(a => ({ name: a.name, brand: a.brand, price: a.price, isOriginal: false }))
+    ];
+
+    comparison.sort((a, b) => a.price - b.price);
+    res.json(comparison);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 // Server başlat
 // ------------------------
 const PORT = 3000;
