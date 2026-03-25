@@ -1,7 +1,12 @@
-require('dotenv').config({ path: '../.env' });
+const mongoose = require("mongoose");
 
-const mongoose = require('mongoose');
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB bağlandı");
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Atlas bağlantısı başarılı"))
-  .catch(err => console.error("MongoDB bağlantı hatası:", err));
+module.exports = connectDB;

@@ -1,31 +1,41 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const User = require('../models/User');
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-// Üye Olma
-router.post('/register', async (req, res) => {
+// LOGIN
+router.post("/login", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(409).json({
-        code: 409,
-        message: 'Bu email zaten kayıtlı.'
-      });
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Kullanıcı bulunamadı" });
     }
 
-    const newUser = new User({ username, email, password });
-    await newUser.save();
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Şifre yanlış" });
+    }
 
-    res.status(201).json({
-      message: 'Kullanıcı oluşturuldu'
-    });
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
-  } catch (error) {
-    console.error('Register hatası:', error);
-    res.status(500).json({ message: 'Sunucu hatası' });
+    res.json({ message: "Giriş başarılı", token });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Sunucu hatası" });
   }
+});
+
+// LOGOUT  ← module.exports'tan ÖNCE olmalı
+router.post("/logout", (req, res) => {
+  res.json({ message: "Çıkış başarılı" });
 });
 
 module.exports = router;

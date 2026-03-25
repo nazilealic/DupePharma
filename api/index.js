@@ -1,46 +1,24 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
 
+require("dotenv").config();
+
+const express = require("express");
 const app = express();
+const mongoose = require("mongoose");
 
-connectDB();
+const authRoutes = require("./routes/auth");
+const productRoutes = require("./routes/products");  // ← YUKARI TAŞINDI
 
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
+app.use("/auth", authRoutes);
+app.use("/products", productRoutes);  // ← YUKARI TAŞINDI
 
-app.use('/v1/auth', require('./routes/auth'));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB bağlandı"))
+  .catch(err => console.log("Mongo hata:", err));
 
-
-app.use('/v1/products', require('./routes/products'));
-app.use('/v1/users', require('./routes/users'));
-
-app.use('/v1/users', require('./routes/favorites'));
-app.use('/v1/pharmacies', require('./routes/pharmacies'));
-
-app.use('/v1/products', require('./routes/reviews'));
-
-app.use('/v1/admin', require('./routes/admin'));
-
-app.use('/v1/ai', require('./routes/ai'));
-
-app.get('/', (req, res) => {
-  res.json({ message: 'DupePharma API çalışıyor 🚀', version: '1.0.0' });
+app.listen(5000, () => {
+  console.log("Server çalışıyor");
 });
 
-app.use((req, res) => {
-  res.status(404).json({ code: 404, message: 'Endpoint bulunamadı.' });
-});
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ code: 500, message: 'Sunucu hatası.' });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Sunucu ${PORT} portunda çalışıyor`));
-
-module.exports = app;
