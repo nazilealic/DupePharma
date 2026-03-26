@@ -1,28 +1,48 @@
 const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
+const authMiddleware = require('../middleware/auth');
 
-// Ürün ekleme
-router.post('/products', async (req, res) => {
-  const product = new Product(req.body);
-  await product.save();
-  res.status(201).json(product);
+// POST /api/admin/products — Ürün ekle
+router.post('/products', authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin yetkisi gerekli' });
+    }
+    const product = new Product(req.body);
+    await product.save();
+    res.status(201).json({ message: 'Ürün eklendi', product });
+  } catch (error) {
+    res.status(500).json({ message: 'Sunucu hatası', error: error.message });
+  }
 });
 
-// Güncelleme
-router.put('/products/:productId', async (req, res) => {
-  const product = await Product.findByIdAndUpdate(
-    req.params.productId,
-    req.body,
-    { new: true }
-  );
-  res.json(product);
+// PUT /api/admin/products/:productId — Ürün güncelle
+router.put('/products/:productId', authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin yetkisi gerekli' });
+    }
+    const product = await Product.findByIdAndUpdate(req.params.productId, req.body, { new: true });
+    if (!product) return res.status(404).json({ message: 'Ürün bulunamadı' });
+    res.json({ message: 'Ürün güncellendi', product });
+  } catch (error) {
+    res.status(500).json({ message: 'Sunucu hatası', error: error.message });
+  }
 });
 
-// Silme
-router.delete('/products/:productId', async (req, res) => {
-  await Product.findByIdAndDelete(req.params.productId);
-  res.status(204).send();
+// DELETE /api/admin/products/:productId — Ürün sil
+router.delete('/products/:productId', authMiddleware, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') {
+      return res.status(403).json({ message: 'Admin yetkisi gerekli' });
+    }
+    const product = await Product.findByIdAndDelete(req.params.productId);
+    if (!product) return res.status(404).json({ message: 'Ürün bulunamadı' });
+    res.json({ message: 'Ürün silindi' });
+  } catch (error) {
+    res.status(500).json({ message: 'Sunucu hatası', error: error.message });
+  }
 });
 
 module.exports = router;
