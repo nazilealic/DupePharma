@@ -1,9 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
 const connectDB = require("./config/db");
-
 const app = express();
 
 // Veritabanı bağlantısı
@@ -24,7 +22,6 @@ app.use('/v1/products', require('./routes/products'));
 app.use('/v1/products', require('./routes/reviews'));
 
 // 3. Kullanıcı ve Favori İşlemleri
-// Not: Hem genel kullanıcı hem favori rotalarını tek bir ana yolda birleştirdik
 app.use('/v1/users', require('./routes/users'));
 app.use('/v1/users', require('./routes/favorites'));
 
@@ -34,12 +31,15 @@ app.use('/v1/pharmacies', require('./routes/pharmacies'));
 // 5. Admin İşlemleri
 app.use('/v1/admin', require('./routes/admin'));
 
+// 6. AI İşlemleri
+app.use('/v1/ai', require('./routes/ai'));
+
 // Ana sayfa kontrolü
 app.get('/', (req, res) => {
   res.json({ message: 'DupePharma API çalışıyor 🚀', version: '1.0.0' });
 });
 
-// 404 Hata yakalayıcı (Eğer buraya düşüyorsa URL yanlıştır)
+// 404 Hata yakalayıcı
 app.use((req, res) => {
   res.status(404).json({ code: 404, message: 'Endpoint bulunamadı. Lütfen URL başında /v1 olduğundan emin olun.' });
 });
