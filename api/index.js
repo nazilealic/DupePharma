@@ -1,23 +1,28 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const connectDB = require('./config/db');
-
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const connectDB = require("./config/db");
 const app = express();
+const mongoose = require("mongoose");
 
+// Veritabanı bağlantısı
 // Veritabanı bağlantısı
 connectDB();
 
+// Middleware'ler
 // Middleware'ler
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- ROTAYI BURADAN TAKİP ET ---
+// --- ROTAYI BURADAN TAKİP ET ---
 
+// 1. Auth İşlemleri (Kayıt, Giriş)
 // 1. Auth İşlemleri (Kayıt, Giriş)
 app.use('/v1/auth', require('./routes/auth'));
 
+// 2. Ürün ve Yorum İşlemleri
 // 2. Ürün ve Yorum İşlemleri
 app.use('/v1/products', require('./routes/products'));
 app.use('/v1/products', require('./routes/reviews'));
@@ -28,8 +33,11 @@ app.use('/v1/users', require('./routes/users'));
 app.use('/v1/users', require('./routes/favorites'));
 
 // 4. Eczane İşlemleri
+
+// 4. Eczane İşlemleri
 app.use('/v1/pharmacies', require('./routes/pharmacies'));
 
+// 5. Admin İşlemleri
 // 5. Admin İşlemleri
 app.use('/v1/admin', require('./routes/admin'));
 
@@ -41,8 +49,10 @@ app.get('/', (req, res) => {
 // 404 Hata yakalayıcı (Eğer buraya düşüyorsa URL yanlıştır)
 app.use((req, res) => {
   res.status(404).json({ code: 404, message: 'Endpoint bulunamadı. Lütfen URL başında /v1 olduğundan emin olun.' });
+  res.status(404).json({ code: 404, message: 'Endpoint bulunamadı. Lütfen URL başında /v1 olduğundan emin olun.' });
 });
 
+// Genel hata yönetimi
 // Genel hata yönetimi
 app.use((err, req, res, next) => {
   console.error(err.stack);

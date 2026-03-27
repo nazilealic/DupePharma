@@ -1,14 +1,31 @@
 const mongoose = require('mongoose');
- 
-const PharmacySchema = new mongoose.Schema({
-  imageUrl: {
-    type: String,
-    required: true
+
+const pharmacySchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true
+    },
+    city: {
+      type: String,
+      default: ''
+    },
+    district: {
+      type: String,
+      default: ''
+    },
+    address: {
+      type: String,
+      default: ''
+    },
+    phone: {
+      type: String,
+      default: ''
+    }
   },
-  updatedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+  {
+    timestamps: true
   }
-}, { timestamps: true });
- 
-module.exports = mongoose.model('Pharmacy', PharmacySchema);
+);
+
+module.exports = mongoose.model('Pharmacy', pharmacySchema);
