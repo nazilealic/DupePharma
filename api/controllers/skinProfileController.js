@@ -51,3 +51,24 @@ exports.updateSkinProfile = async (req, res) => {
     return res.status(500).json({ code: 500, message: err.message });
   }
 };
+
+// ────────────────────────────────────────────────────────
+// Cilt Profili Görüntüle
+// ────────────────────────────────────────────────────────
+exports.getSkinProfile = async (req, res) => {
+  try {
+    if (!isSelfOrAdmin(req))
+      return res.status(403).json({ code: 403, message: 'Bu işlem için yetkiniz bulunmamaktadır.' });
+
+    const user = await User.findById(req.params.userId);
+    if (!user)
+      return res.status(404).json({ code: 404, message: 'İstenen kaynak bulunamadı.' });
+
+    if (!user.skinProfile?.skinType)
+      return res.status(404).json({ code: 404, message: 'Cilt profili henüz oluşturulmamış.' });
+
+    return res.json({ userId: user._id, ...user.skinProfile.toObject() });
+  } catch (err) {
+    return res.status(500).json({ code: 500, message: err.message });
+  }
+};

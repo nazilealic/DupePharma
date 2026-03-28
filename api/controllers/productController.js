@@ -97,9 +97,21 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-// ────────────────────────────────────────────────────────
-// #27 Bahar Balım — Ürün Sil (Admin)
-// ────────────────────────────────────────────────────────
+
+// Ürün Oluştur (Admin yetkisi)
+exports.createProduct = async (req, res) => {
+  try {
+    if (req.user?.role !== 'admin')
+      return res.status(403).json({ code: 403, message: 'Bu işlem için Admin yetkisi gereklidir.' });
+
+    const product = await Product.create(req.body);
+    return res.status(201).json(product);
+  } catch (err) {
+    return res.status(500).json({ code: 500, message: err.message });
+  }
+};
+
+//Ürün Sil(admin yetkisi)
 exports.deleteProduct = async (req, res) => {
   try {
     if (req.user?.role !== 'admin')

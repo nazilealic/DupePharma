@@ -9,6 +9,9 @@ router.post('/:userId/skin-profile', protect, skinProfileController.createSkinPr
 // #8 Nazile — PUT /users/:userId/skin-profile
 router.put('/:userId/skin-profile', protect, skinProfileController.updateSkinProfile);
 
+// Cilt Profili Görüntüle - Nazile
+router.get('/:userId/skin-profile', protect, skinProfileController.getSkinProfile);
+
 // #24 Bahar — PUT /users/:userId/password
 const authController = require('../controllers/authController');
 router.put('/:userId/password', protect, authController.passwordReset);
