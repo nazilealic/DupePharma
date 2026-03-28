@@ -1,65 +1,45 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const connectDB = require("./config/db");
+const express = require('express');
+const mongoose = require('mongoose');
+require('dotenv').config();
+
 const app = express();
-const mongoose = require("mongoose");
-
-// Veritabanı bağlantısı
-// Veritabanı bağlantısı
-connectDB();
-
-// Middleware'ler
-// Middleware'ler
-app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// --- ROTAYI BURADAN TAKİP ET ---
-// --- ROTAYI BURADAN TAKİP ET ---
+// ── ROUTES ──────────────────────────────────────────
+const authRoutes          = require('./routes/auth');
+const productRoutes       = require('./routes/products');
+const alternativeRoutes   = require('./routes/alternatives');
+const searchHistoryRoutes = require('./routes/searchHistory');
+const skinProfileRoutes   = require('./routes/skinProfile');
+const favoritesRoutes     = require('./routes/favorites');
+const pharmacyRoutes      = require('./routes/pharmacies');
+const reviewRoutes        = require('./routes/reviews');
+const adminRoutes         = require('./routes/admin');
+const aiRoutes            = require('./routes/ai');
 
-// 1. Auth İşlemleri (Kayıt, Giriş)
-// 1. Auth İşlemleri (Kayıt, Giriş)
-app.use('/v1/auth', require('./routes/auth'));
+// ── MOUNT ────────────────────────────────────────────
+app.use('/auth',       authRoutes);
+app.use('/products',   productRoutes);
+app.use('/products',   alternativeRoutes);
+app.use('/products',   reviewRoutes);
+app.use('/users',      searchHistoryRoutes);
+app.use('/users',      skinProfileRoutes);
+app.use('/users',      favoritesRoutes);
+app.use('/pharmacies', pharmacyRoutes);
+app.use('/admin',      adminRoutes);
+app.use('/ai',         aiRoutes);
 
-// 2. Ürün ve Yorum İşlemleri
-// 2. Ürün ve Yorum İşlemleri
-app.use('/v1/products', require('./routes/products'));
-app.use('/v1/products', require('./routes/reviews'));
-
-// 3. Kullanıcı ve Favori İşlemleri
-// Not: Hem genel kullanıcı hem favori rotalarını tek bir ana yolda birleştirdik
-app.use('/v1/users', require('./routes/users'));
-app.use('/v1/users', require('./routes/favorites'));
-
-// 4. Eczane İşlemleri
-
-// 4. Eczane İşlemleri
-app.use('/v1/pharmacies', require('./routes/pharmacies'));
-
-// 5. Admin İşlemleri
-// 5. Admin İşlemleri
-app.use('/v1/admin', require('./routes/admin'));
-
-// Ana sayfa kontrolü
-app.get('/', (req, res) => {
-  res.json({ message: 'DupePharma API çalışıyor 🚀', version: '1.0.0' });
-});
-
-// 404 Hata yakalayıcı (Eğer buraya düşüyorsa URL yanlıştır)
-app.use((req, res) => {
-  res.status(404).json({ code: 404, message: 'Endpoint bulunamadı. Lütfen URL başında /v1 olduğundan emin olun.' });
-  res.status(404).json({ code: 404, message: 'Endpoint bulunamadı. Lütfen URL başında /v1 olduğundan emin olun.' });
-});
-
-// Genel hata yönetimi
-// Genel hata yönetimi
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ code: 500, message: 'Sunucu hatası.' });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Sunucu ${PORT} portunda çalışıyor`));
+// ── DB & START ───────────────────────────────────────
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('MongoDB bağlantısı başarılı');
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(`Sunucu ${process.env.PORT || 3000} portunda çalışıyor`);
+    });
+  })
+  .catch(err => {
+    console.error('MongoDB bağlantı hatası:', err);
+    process.exit(1);
+  });
 
 module.exports = app;
