@@ -1,57 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const Review = require('../models/Review');
-const authMiddleware = require('../middleware/auth');
+const { protect } = require('../middleware/auth');
+const reviewController = require('../controllers/reviewController');
 
-// GET /api/reviews?productId=xxx — Ürüne ait yorumları getir
-router.get('/', async (req, res) => {
-  try {
-    const { productId } = req.query;
-    const filter = productId ? { product: productId } : {};
-    const reviews = await Review.find(filter)
-      .populate('user', 'name')
-      .populate('product', 'name');
-    res.json(reviews);
-  } catch (error) {
-    res.status(500).json({ message: 'Sunucu hatası', error: error.message });
-  }
-});
+// #18 Menekşe — Yorumları Listele (public erişimli)
+router.get('/:productId/reviews', reviewController.listReviews);
 
-// POST /api/reviews — Yorum ekle (giriş gerekli)
-router.post('/', authMiddleware, async (req, res) => {
-  try {
-    const { productId, rating, comment } = req.body;
-    if (!productId || !rating) {
-      return res.status(400).json({ message: 'productId ve rating zorunludur' });
-    }
-    const review = new Review({
-      user: req.user.id,
-      product: productId,
-      rating,
-      comment
-    });
-    await review.save();
-    res.status(201).json({ message: 'Yorum eklendi', review });
-  } catch (error) {
-    res.status(500).json({ message: 'Sunucu hatası', error: error.message });
-  }
-});
+// #16 Menekşe — Yorum Ekle
+router.post('/:productId/reviews', protect, reviewController.createReview);
 
-// DELETE /api/reviews/:reviewId — Yorum sil (kendi yorumu)
-router.delete('/:reviewId', authMiddleware, async (req, res) => {
-  try {
-    const review = await Review.findById(req.params.reviewId);
-    if (!review) return res.status(404).json({ message: 'Yorum bulunamadı' });
+// #19 Menekşe — Yorum Güncelle
+router.put('/:productId/reviews/:reviewId', protect, reviewController.updateReview);
 
-    if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Yetkisiz' });
-    }
+// #17 Menekşe — Yorum Sil
+router.delete('/:productId/reviews/:reviewId', protect, reviewController.deleteReview);
 
-    await review.deleteOne();
-    res.json({ message: 'Yorum silindi' });
-  } catch (error) {
-    res.status(500).json({ message: 'Sunucu hatası', error: error.message });
-  }
-});
+// #20 Menekşe — Ürünü Puanla
+router.post('/:productId/ratings', protect, reviewController.rateProduct);
 
 module.exports = router;

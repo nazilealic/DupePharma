@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DupePharma</title>
+</head>
+<body>
+
+  <h1>DupePharma</h1>
+
+  <!-- 🔍 Arama -->
+  <h2>Ürün Ara</h2>
+  <input type="text" id="searchInput" placeholder="Ürün ara...">
+  <button onclick="search()">Ara</button>
+
+  <ul id="results"></ul>
+
+  <!-- 📜 History -->
+  <h2>Arama Geçmişi</h2>
+  <button onclick="getHistory()">Getir</button>
+  <button onclick="deleteHistory()">Sil</button>
+
+  <ul id="history"></ul>
+
+  <!-- 🧴 Cilt Profili -->
+  <h2>Cilt Profili</h2>
+
+  <input id="skinType" placeholder="yağlı/kuru/karma"><br>
+  <input id="sensitivity" placeholder="hassas/normal"><br>
+  <input id="concerns" placeholder="akne,leke"><br>
+
+  <button onclick="createProfile()">Oluştur</button>
+  <button onclick="getProfile()">Getir</button>
+
+  <pre id="profile"></pre>
+
+<script>
+
+const userId = "69bdd47f05c90d85b69893c6";
+
+// 🔍 Ürün arama
+async function search() {
+  const query = document.getElementById("searchInput").value;
+
+  const res = await fetch(`http://localhost:3000/products/search?query=${query}&userId=${userId}`);
+  const data = await res.json();
+
+  const list = document.getElementById("results");
+  list.innerHTML = "";
+
+  data.forEach(p => {
+    const li = document.createElement("li");
+    li.innerText = p.name + " - " + p.brand + " - " + p.price + "₺";
+    list.appendChild(li);
+  });
+}
+
+// 📜 History getir
+async function getHistory() {
+  const res = await fetch(`http://localhost:3000/users/${userId}/search-history`);
+  const data = await res.json();
+
+  const list = document.getElementById("history");
+  list.innerHTML = "";
+
+  data.forEach(h => {
+    const li = document.createElement("li");
+    li.innerText = h;
+    list.appendChild(li);
+  });
+}
+
+// 🗑 History sil
+async function deleteHistory() {
+  await fetch(`http://localhost:3000/users/${userId}/search-history`, {
+    method: "DELETE"
+  });
+
+  alert("Silindi");
+  getHistory();
+}
+
+// 🧴 Profil oluştur
+async function createProfile() {
+  const skinType = document.getElementById("skinType").value;
+  const sensitivity = document.getElementById("sensitivity").value;
+  const concerns = document.getElementById("concerns").value.split(",");
+
+  await fetch(`http://localhost:3000/users/${userId}/skin-profile`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ skinType, sensitivity, concerns })
+  });
+
+  alert("Profil oluşturuldu");
+}
+
+// 🧴 Profil getir
+async function getProfile() {
+  const res = await fetch(`http://localhost:3000/users/${userId}/skin-profile`);
+  const data = await res.json();
+
+  document.getElementById("profile").innerText = JSON.stringify(data, null, 2);
+}
+
+</script>
+
+</body>
+</html>
