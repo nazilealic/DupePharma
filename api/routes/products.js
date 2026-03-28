@@ -3,6 +3,9 @@ const router = express.Router();
 const { protect } = require('../middleware/auth');
 const productController = require('../controllers/productController');
 
+//ürün oluşturma 
+router.post('/', protect, productController.createProduct);
+
 // #1  Nazile — Ürünleri Listele | #9 Şadiye — Kategori Filtrele | #10 Şadiye — Fiyat Filtrele
 router.get('/', protect, productController.listProducts);
 
