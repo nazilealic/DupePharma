@@ -1,0 +1,20 @@
+# Kütüphaneleri gizleme (Her yerdeki node_modules)
+**/node_modules/
+node_modules/
+
+# Gizli ayarları ve şifreleri gizle
+.env
+.env.local
+
+# İşletim sistemi çöplerini gizle
+.DS_Store
+Thumbs.db
+
+# Build klasörlerini gizle
+dist/
+build/
+.next/
+
+#uploads klasörü
+uploads/*
+!uploads/.gitkeep
