@@ -5,7 +5,7 @@
 
 ## Proje Hakkında
 
-![Ürün Tanıtım Görseli](web.png)
+![Ürün Tanıtım Görseli](dupepharma.png)
 
 **Proje Tanımı:** 
 
