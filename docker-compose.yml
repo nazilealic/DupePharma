@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+
+  # 1. MongoDB Kapsayıcısı
+  mongodb_kapsayici:
+    image: mongo:6.0
+    container_name: mongodb_kapsayici
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+  # 2. REST API Kapsayıcısı
+  dupepharmaapi_kapsayici:
+    build: ./api
+    container_name: dupepharmaapi_kapsayici
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGODB_URI=mongodb://mongodb_kapsayici:27017/dupepharma
+      - JWT_SECRET=supersecretkey
+      - JWT_EXPIRES_IN=3600
+    depends_on:
+      - mongodb_kapsayici
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+  # 3. Front-End Kapsayıcısı
+  dupepharma_kapsayici:
+    build: ./dupepharma-frontend2
+    container_name: dupepharma_kapsayici
+    ports:
+      - "3001:3001"
+    environment:
+      - REACT_APP_API_URL=http://dupepharmaapi_kapsayici:3000
+    depends_on:
+      - dupepharmaapi_kapsayici
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+networks:
+  dupepharma_network:
+    driver: bridge
+
+volumes:
+  mongo_data:
