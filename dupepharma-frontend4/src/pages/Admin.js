@@ -6,7 +6,6 @@ const EMPTY = { name:'', brand:'', category:'', price:'', description:'', ingred
 export default function Admin() {
   const [activeTab, setActiveTab] = useState('products');
 
-  // ── Ürün state ──
   const [products, setProducts]   = useState([]);
   const [prodLoading, setProdLoading] = useState(true);
   const [search, setSearch]       = useState('');
@@ -19,7 +18,6 @@ export default function Admin() {
   const [error, setError]         = useState('');
   const [success, setSuccess]     = useState('');
 
-  // ── Kullanıcı state ──
   const [users, setUsers]         = useState([]);
   const [userLoading, setUserLoading] = useState(false);
   const [userSearch, setUserSearch] = useState('');
@@ -108,7 +106,22 @@ export default function Admin() {
     if (!window.confirm(`"${name}" kullanıcısı silinsin mi?`)) return;
     const status = await api.deleteUser(id);
     if (status === 204) { setSuccess('Kullanıcı silindi. ✅'); setTimeout(() => setSuccess(''), 3000); fetchUsers(); }
-    else setError('Kullanıcı silinemedi. Backend endpoint eksik olabilir.');
+    else setError('Kullanıcı silinemedi.');
+  };
+
+  const handleResetPassword = async (u) => {
+    const yeniSifre = prompt(`${u.fullName} için yeni şifre girin (min 8 karakter):`);
+    if (!yeniSifre) return;
+    if (yeniSifre.length < 8) { alert('Şifre en az 8 karakter olmalı!'); return; }
+    try {
+      const res = await api.updatePassword(u._id || u.id, { newPassword: yeniSifre });
+      if (res.message && !res.code) {
+        setSuccess(`${u.fullName} için şifre güncellendi! ✅`);
+        setTimeout(() => setSuccess(''), 3000);
+      } else {
+        setError(res.message || 'Şifre güncellenemedi.');
+      }
+    } catch { setError('Hata oluştu.'); }
   };
 
   const filteredProducts = products.filter(p =>
@@ -222,11 +235,18 @@ export default function Admin() {
                         {u.createdAt ? new Date(u.createdAt).toLocaleDateString('tr-TR') : '-'}
                       </td>
                       <td>
-                        <button className="btn btn-danger btn-sm"
-                          onClick={() => handleDeleteUser(u._id || u.id, u.fullName)}
-                          disabled={u.role === 'admin'}>
-                          🗑️ Sil
-                        </button>
+                        <div style={{ display:'flex', gap:'0.4rem' }}>
+                          <button className="btn btn-secondary btn-sm"
+                            disabled={u.role === 'admin'}
+                            onClick={() => handleResetPassword(u)}>
+                            🔑 Şifre
+                          </button>
+                          <button className="btn btn-danger btn-sm"
+                            onClick={() => handleDeleteUser(u._id || u.id, u.fullName)}
+                            disabled={u.role === 'admin'}>
+                            🗑️ Sil
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

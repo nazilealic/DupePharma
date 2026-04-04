@@ -156,6 +156,9 @@ const api = {
       body: JSON.stringify({ rating }),
     }).then(r => r.json()),
 
+  getSkinProfile: (userId) =>
+    fetch(`${BASE_URL}/users/${userId}/skin-profile`, { headers: authHeaders() }).then(r => r.json()),
+
   // ── ADMIN USERS ────────────────────────────────────
   getUsers: () =>
     fetch(`${BASE_URL}/admin/users`, { headers: authHeaders() }).then(r => r.json()),

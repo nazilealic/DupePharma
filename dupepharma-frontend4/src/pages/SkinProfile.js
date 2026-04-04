@@ -12,9 +12,30 @@ export default function SkinProfile() {
   const [msg, setMsg] = useState('');
   const [err, setErr] = useState('');
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState('create');
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [hasProfile, setHasProfile] = useState(false);
   const [history, setHistory] = useState([]);
   const [histLoading, setHistLoading] = useState(false);
+
+  // Sayfa açılınca mevcut cilt profilini yükle
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setProfileLoading(true);
+      try {
+        const data = await api.getSkinProfile(user.id);
+        if (data && data.skinType) {
+          setForm({
+            skinType: data.skinType || 'normal',
+            sensitivity: data.sensitivity || false,
+            skinProblems: data.skinProblems || [],
+          });
+          setHasProfile(true);
+        }
+      } catch {}
+      setProfileLoading(false);
+    };
+    fetchProfile();
+  }, [user.id]);
 
   useEffect(() => {
     if (activeTab === 'history') {
@@ -35,17 +56,21 @@ export default function SkinProfile() {
     e.preventDefault();
     setLoading(true); setMsg(''); setErr('');
     try {
-      const fn = mode === 'create' ? api.createSkinProfile : api.updateSkinProfile;
+      // Profil varsa güncelle, yoksa oluştur
+      const fn = hasProfile ? api.updateSkinProfile : api.createSkinProfile;
       const res = await fn(user.id, form);
       if (res.code >= 400) {
-        // "PUT kullanın" mesajı yerine kullanıcı dostu mesaj
-        if (res.message?.toLowerCase().includes('put') || res.message?.toLowerCase().includes('güncelle')) {
-          setErr('Cilt profiliniz zaten mevcut. Güncellemek için "Güncelle" sekmesini kullanın.');
+        if (res.message?.toLowerCase().includes('put') || res.message?.toLowerCase().includes('mevcut')) {
+          // Profil zaten var, güncelle
+          const updateRes = await api.updateSkinProfile(user.id, form);
+          if (updateRes.code >= 400) { setErr(updateRes.message); }
+          else { setMsg('Cilt profili güncellendi! ✅'); setHasProfile(true); }
         } else {
           setErr(res.message);
         }
       } else {
-        setMsg(mode === 'create' ? 'Cilt profili oluşturuldu! ✅' : 'Cilt profili güncellendi! ✅');
+        setMsg(hasProfile ? 'Cilt profili güncellendi! ✅' : 'Cilt profili oluşturuldu! ✅');
+        setHasProfile(true);
       }
     } catch { setErr('Hata oluştu.'); }
     setLoading(false);
@@ -57,6 +82,8 @@ export default function SkinProfile() {
     setHistory([]);
   };
 
+  if (profileLoading) return <div className="loading-screen">Yükleniyor...</div>;
+
   return (
     <div className="page-wrapper">
       <h1 className="page-title">🌿 Profilim</h1>
@@ -67,41 +94,50 @@ export default function SkinProfile() {
 
       {activeTab === 'profile' && (
         <div className="card" style={{ maxWidth: 580 }}>
-          <div className="tabs" style={{ marginBottom: '1.5rem' }}>
-            <button className={`tab-btn ${mode === 'create' ? 'active' : ''}`} onClick={() => { setMode('create'); setMsg(''); setErr(''); }}>Oluştur</button>
-            <button className={`tab-btn ${mode === 'update' ? 'active' : ''}`} onClick={() => { setMode('update'); setMsg(''); setErr(''); }}>Güncelle</button>
-          </div>
+          {hasProfile && (
+            <div className="alert alert-success" style={{ marginBottom: '1rem' }}>
+              ✅ Mevcut cilt profiliniz yüklendi. Değişiklik yapıp kaydedebilirsiniz.
+            </div>
+          )}
           {msg && <div className="alert alert-success">{msg}</div>}
           {err && <div className="alert alert-error">{err}</div>}
+
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Cilt Tipi</label>
               <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
                 {SKIN_TYPES.map(t => (
-                  <button key={t} type="button" className={`btn btn-sm ${form.skinType === t ? 'btn-primary' : 'btn-secondary'}`}
+                  <button key={t} type="button"
+                    className={`btn btn-sm ${form.skinType === t ? 'btn-primary' : 'btn-secondary'}`}
                     onClick={() => setForm(f => ({ ...f, skinType: t }))}>{t}</button>
                 ))}
               </div>
             </div>
+
             <div className="form-group">
               <label>Hassasiyet</label>
               <div style={{ display: 'flex', gap: '0.4rem', marginTop: '0.5rem' }}>
-                <button type="button" className={`btn btn-sm ${form.sensitivity ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setForm(f => ({ ...f, sensitivity: true }))}>Evet</button>
-                <button type="button" className={`btn btn-sm ${!form.sensitivity ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setForm(f => ({ ...f, sensitivity: false }))}>Hayır</button>
+                <button type="button" className={`btn btn-sm ${form.sensitivity ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setForm(f => ({ ...f, sensitivity: true }))}>Evet</button>
+                <button type="button" className={`btn btn-sm ${!form.sensitivity ? 'btn-primary' : 'btn-secondary'}`}
+                  onClick={() => setForm(f => ({ ...f, sensitivity: false }))}>Hayır</button>
               </div>
             </div>
+
             <div className="form-group">
               <label>Cilt Sorunları</label>
               <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
                 {PROBLEMS.map(p => (
-                  <button key={p} type="button" className={`btn btn-sm ${form.skinProblems.includes(p) ? 'btn-primary' : 'btn-secondary'}`}
+                  <button key={p} type="button"
+                    className={`btn btn-sm ${form.skinProblems.includes(p) ? 'btn-primary' : 'btn-secondary'}`}
                     onClick={() => toggleProblem(p)}>{p}</button>
                 ))}
               </div>
             </div>
+
             <div className="divider" />
             <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-              {loading ? 'Kaydediliyor...' : mode === 'create' ? 'Profil Oluştur' : 'Profil Güncelle'}
+              {loading ? 'Kaydediliyor...' : hasProfile ? '💾 Profili Güncelle' : '✨ Profil Oluştur'}
             </button>
           </form>
         </div>

@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
     return res.json({
       token,
       expiresIn: Number(process.env.JWT_EXPIRES_IN) || 3600,
-      user: { id: user._id, email: user.email, fullName: user.fullName },
+      user: { id: user._id, email: user.email, fullName: user.fullName, role: user.role },
     });
   } catch (err) {
     return res.status(500).json({ code: 500, message: err.message });

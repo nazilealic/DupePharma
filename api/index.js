@@ -5,6 +5,8 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors());
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 
 const authRoutes          = require('./routes/auth');
