@@ -142,7 +142,14 @@ export default function Products() {
           <div className="product-grid">
             {products.map(p => (
               <div key={p._id} className="product-card" onClick={() => navigate(`/products/${p._id}`)}>
-                <div className="product-card-img">💊</div>
+                <div className="product-card-img">
+                 {p.imageUrl
+                  ? <img src={p.imageUrl} alt={p.name}
+                  style={{ width:'100%', height:'160px', objectFit:'contain', padding:'8px' }}
+                  onError={e => { e.target.style.display='none'; e.target.parentElement.innerHTML='💊'; }} />
+                   : '💊'
+                     }
+                </div>
                 <div className="product-card-body">
                   <div className="product-card-brand">{p.brand}</div>
                   <div className="product-card-name">{p.name}</div>

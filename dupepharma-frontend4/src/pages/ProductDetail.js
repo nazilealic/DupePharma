@@ -60,7 +60,14 @@ export default function ProductDetail() {
 
       {/* Başlık */}
       <div className="card" style={{ display: 'flex', gap: '1.5rem', marginBottom: '1.5rem', alignItems: 'flex-start' }}>
-        <div style={{ fontSize: '4rem', lineHeight: 1 }}>💊</div>
+        <div style={{ width: 120, height: 120, borderRadius: 12, overflow: 'hidden', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg3)' }}>
+  {product.imageUrl
+    ? <img src={product.imageUrl} alt={product.name}
+        style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '8px' }}
+        onError={e => { e.target.style.display='none'; e.target.parentElement.innerHTML='💊'; }} />
+    : <span style={{ fontSize: '3rem' }}>💊</span>
+  }
+</div>
         <div style={{ flex: 1 }}>
           <div style={{ color: 'var(--accent)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>{product.brand}</div>
           <h1 style={{ fontSize: '1.7rem', margin: '0.25rem 0 0.5rem' }}>{product.name}</h1>
