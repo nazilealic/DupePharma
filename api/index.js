@@ -7,7 +7,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ── ROUTES ──────────────────────────────────────────
 const authRoutes          = require('./routes/auth');
 const productRoutes       = require('./routes/products');
 const alternativeRoutes   = require('./routes/alternatives');
@@ -19,7 +18,6 @@ const reviewRoutes        = require('./routes/reviews');
 const adminRoutes         = require('./routes/admin');
 const aiRoutes            = require('./routes/ai');
 
-// ── MOUNT ────────────────────────────────────────────
 app.use('/auth',       authRoutes);
 app.use('/products',   productRoutes);
 app.use('/products',   alternativeRoutes);
@@ -31,9 +29,15 @@ app.use('/pharmacies', pharmacyRoutes);
 app.use('/admin',      adminRoutes);
 app.use('/ai',         aiRoutes);
 
-// ── DB ───────────────────────────────────────────────
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB bağlantısı başarılı'))
+  .then(() => {
+    console.log('MongoDB bağlantısı başarılı');
+    if (process.env.NODE_ENV !== 'production') {
+      app.listen(process.env.PORT || 3000, () => {
+        console.log(`Sunucu ${process.env.PORT || 3000} portunda çalışıyor`);
+      });
+    }
+  })
   .catch(err => console.error('MongoDB bağlantı hatası:', err));
 
 module.exports = app;
