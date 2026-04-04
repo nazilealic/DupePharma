@@ -288,6 +288,7 @@ export default function Admin() {
                     <option value="güneş koruyucu">Güneş Koruyucu</option>
                     <option value="serum">Serum</option>
                     <option value="tonik">Tonik</option>
+                    <option value="takviye">Takviye</option>
                   </select>
                 </div>
                 <div className="form-group">

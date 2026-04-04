@@ -99,6 +99,7 @@ export default function Products() {
             <option value="güneş koruyucu">Güneş Koruyucu</option>
             <option value="serum">Serum</option>
             <option value="tonik">Tonik</option>
+            <option value="takviye">Temizleyici</option>
           </select>
         </div>
         <div className="filter-group">
