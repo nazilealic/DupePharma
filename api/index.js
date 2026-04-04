@@ -1,8 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // ── ROUTES ──────────────────────────────────────────
@@ -29,17 +31,9 @@ app.use('/pharmacies', pharmacyRoutes);
 app.use('/admin',      adminRoutes);
 app.use('/ai',         aiRoutes);
 
-// ── DB & START ───────────────────────────────────────
+// ── DB ───────────────────────────────────────────────
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('MongoDB bağlantısı başarılı');
-    app.listen(process.env.PORT || 3000, () => {
-      console.log(`Sunucu ${process.env.PORT || 3000} portunda çalışıyor`);
-    });
-  })
-  .catch(err => {
-    console.error('MongoDB bağlantı hatası:', err);
-    process.exit(1);
-  });
+  .then(() => console.log('MongoDB bağlantısı başarılı'))
+  .catch(err => console.error('MongoDB bağlantı hatası:', err));
 
 module.exports = app;
