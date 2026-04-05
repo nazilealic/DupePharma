@@ -1,7 +1,7 @@
 
 # Menekşe Nazik'in REST API Metotları
 
-**API Test Videosu:** **Link sonradan eklenecek**
+**API Test Videosu:** **https://www.youtube.com/watch?v=1CObXsUjEKw**
 
 ---
 
