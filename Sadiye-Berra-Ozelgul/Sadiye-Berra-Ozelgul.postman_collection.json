@@ -1,0 +1,449 @@
+{
+  "info": {
+    "_postman_id": "5b225918-4399-4db9-97a2-457f556c4e33",
+    "name": "Sadiye-Berra-Ozelgul",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50525757",
+    "_collection_link": "https://go.postman.co/collection/50525757-5b225918-4399-4db9-97a2-457f556c4e33?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Kayıt Ol",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"berran@example.com\",\r\n  \"password\": \"Test1234!\",\r\n  \"fullName\": \"Test \"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/auth/register",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Giriş Yap",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"berran@example.com\",\r\n  \"password\": \"Test1234!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Kullanıcı Oluştur",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"fullName\": \"Berra Özelgül\",\r\n  \"email\": \"berrazelgl@hotmail.com\",\r\n  \"password\": \"B0703.berra\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/auth/register",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Admin Kullanıcı Girişi",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"berraozelgul@gmail.com\",\r\n  \"password\": \"berra1234\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/auth/login",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ürün Ekle",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Cicaplast Baume B5\",\r\n  \"brand\": \"La Roche-Posay\",\r\n  \"category\": \"nemlendirici\",\r\n  \"price\": 1049.90,\r\n  \"description\": \"Hassas ciltler için yatıştırıcı balm.\",\r\n  \"ingredients\": [\"Aqua\", \"Glycerin\", \"Niacinamide\", \"Panthenol\"],\r\n  \"volume\": \"100 ml\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/admin/products",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "admin",
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Kategori Filtrelemesi",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/products?category=nemlendirici",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "category",
+              "value": "nemlendirici"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fiyat Aralığı Filtrelemesi",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/products?minPrice=100&maxPrice=700",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "products"
+          ],
+          "query": [
+            {
+              "key": "minPrice",
+              "value": "100"
+            },
+            {
+              "key": "maxPrice",
+              "value": "700"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Favorilere Ekle",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{userToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"productId\": \"69d2970e6594e6681624e535\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/users/{{userId}}/favorites",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{{userId}}",
+            "favorites"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Favorileri Listele",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2ZjNWNhOGRhYzVmZTM0ODNmMWQ4MSIsImVtYWlsIjoiYmVycmFvemVsZ3VsQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc3NTQwODA0NywiZXhwIjoxNzc1NDExNjQ3fQ.9i5PKwjIInrFZGaPmCBAIzS73aRjpRJGluDQD-C1ffE",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/users/{{userId}}/favorites",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{{userId}}",
+            "favorites"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Favorilerden Çıkar",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{adminToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/users/{{userId}}/favorites/{{productId}}",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "users",
+            "{{userId}}",
+            "favorites",
+            "{{productId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Nöbetçi Eczane Listesini Görüntüle",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/pharmacies/on-duty",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "pharmacies",
+            "on-duty"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Nöbetçi Eczane Listesini Düzenle",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/pharmacies/on-duty",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "pharmacies",
+            "on-duty"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "userToken",
+      "value": ""
+    },
+    {
+      "key": "adminToken",
+      "value": ""
+    },
+    {
+      "key": "productId",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": ""
+    }
+  ]
+}
