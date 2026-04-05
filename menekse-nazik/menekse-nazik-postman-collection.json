@@ -1,0 +1,303 @@
+{
+  "info": {
+    "_postman_id": "67a03aad-c8fa-42ae-bb54-f02d707553ec",
+    "name": "dupepharma-menekşe-nazik",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53399627",
+    "_collection_link": "https://go.postman.co/collection/53399627-67a03aad-c8fa-42ae-bb54-f02d707553ec?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "üye olma",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n  \"email\": \"menekse@hotmail.com\",\r\n  \"password\": \"12345678\",\r\n  \"fullName\": \"menekse nazik\"\r\n\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/auth/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "giriş yapma",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "\r\n{\r\n  \"email\": \"menekse@hotmail.com\",\r\n  \"password\": \"12345678\"\r\n \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ürüne yorum ekleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkYjBjZTNjNjI1OTBiNGMwOTgxNiIsImVtYWlsIjoibWVuZWtzZUBob3RtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc0NzA5NDU3LCJleHAiOjE3NzQ3MTMwNTd9.86OM7-fV74I4EVfhJ1OeqRiAEBx8qFjwswHgMSg7dJs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"comment\":\"ürün çok iyi\",\r\n    \"rating\":3\r\n  \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/products/69c304b8ebcad7df92078a8a/reviews",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "products",
+            "69c304b8ebcad7df92078a8a",
+            "reviews"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ürün yorumlarını listeleme",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/products/69c304b8ebcad7df92078a8a/reviews",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "products",
+            "69c304b8ebcad7df92078a8a",
+            "reviews"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ürün yorumunu güncelleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkYjBjZTNjNjI1OTBiNGMwOTgxNiIsImVtYWlsIjoibWVuZWtzZUBob3RtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc0NzA5NDU3LCJleHAiOjE3NzQ3MTMwNTd9.86OM7-fV74I4EVfhJ1OeqRiAEBx8qFjwswHgMSg7dJs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"comment\":\"ürünü  beğendim \",\r\n    \"rating\":4\r\n  \r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/products/69c304b8ebcad7df92078a8a/reviews/69c7eb12e3c62590b4c0981c",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "products",
+            "69c304b8ebcad7df92078a8a",
+            "reviews",
+            "69c7eb12e3c62590b4c0981c"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ürün yorumunu sil",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkYjBjZTNjNjI1OTBiNGMwOTgxNiIsImVtYWlsIjoibWVuZWtzZUBob3RtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc0NzA5NDU3LCJleHAiOjE3NzQ3MTMwNTd9.86OM7-fV74I4EVfhJ1OeqRiAEBx8qFjwswHgMSg7dJs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/products/69c304b8ebcad7df92078a8a/reviews/69c7eb12e3c62590b4c0981c",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "products",
+            "69c304b8ebcad7df92078a8a",
+            "reviews",
+            "69c7eb12e3c62590b4c0981c"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "çıkış yapma",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkYjBjZTNjNjI1OTBiNGMwOTgxNiIsImVtYWlsIjoibWVuZWtzZUBob3RtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzc0NzA5NDU3LCJleHAiOjE3NzQ3MTMwNTd9.86OM7-fV74I4EVfhJ1OeqRiAEBx8qFjwswHgMSg7dJs",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/auth/logout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ürüne puan vermek",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzgwOTBhYmUzNDZlZTcxYjU3MjJiNyIsImVtYWlsIjoibWVuZWtzZW5AaG90bWFpbC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc3NDcxOTg3MiwiZXhwIjoxNzc0NzIzNDcyfQ.PubFH7BaBoBQuj6VFEH7to3-KV-2mdKbLZTronCjyfc",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"rating\":3\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3000/products/69c304b8ebcad7df92078a8a/ratings",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "products",
+            "69c304b8ebcad7df92078a8a",
+            "ratings"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
