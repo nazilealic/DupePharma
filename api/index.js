@@ -81,11 +81,10 @@ app.use('/ai',         aiRoutes);
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('MongoDB bağlantısı başarılı');
-    if (process.env.NODE_ENV !== 'production') {
-      app.listen(process.env.PORT || 3000, () => {
-        console.log(`Sunucu ${process.env.PORT || 3000} portunda çalışıyor`);
-      });
-    }
+    const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => {
+  console.log(`Sunucu ${PORT} portunda çalışıyor`);
+});
   })
   .catch(err => console.error('MongoDB bağlantı hatası:', err));
 
