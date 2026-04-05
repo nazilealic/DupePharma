@@ -4,7 +4,13 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://dupe-pharma-vkej.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true
+}));
+
+app.options("*", cors());
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
