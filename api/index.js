@@ -5,16 +5,31 @@ require('dotenv').config();
 
 const app = express();
 
+const allowedOrigins = [
+  "https://dupe-pharma-vkej.vercel.app",
+  "http://localhost:3001",
+  "http://localhost:3000"
+];
+
 const corsOptions = {
-  origin: "https://dupe-pharma-vkej.vercel.app",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy violation'));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 };
 
-// 1. Manuel CORS header middleware (en güvenli yöntem)
+// 1. Manuel CORS header middleware
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://dupe-pharma-vkej.vercel.app");
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS,PATCH");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
@@ -24,25 +39,22 @@ app.use((req, res, next) => {
   next();
 });
 
-// 2. OPTIONS preflight için cors middleware
-app.options("*", cors(corsOptions));
-
-// 3. Tüm route'lara cors uygula
+// 2. Tüm route'lara cors uygula
 app.use(cors(corsOptions));
 
-// 4. JSON parser
+// 3. JSON parser
 app.use(express.json());
 
-// 5. Static dosyalar
+// 4. Static dosyalar
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// 6. UptimeRobot için health check endpoint
+// 5. UptimeRobot için health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// 7. Route'lar
+// 6. Route'lar
 const authRoutes          = require('./routes/auth');
 const productRoutes       = require('./routes/products');
 const alternativeRoutes   = require('./routes/alternatives');
@@ -65,7 +77,7 @@ app.use('/pharmacies', pharmacyRoutes);
 app.use('/admin',      adminRoutes);
 app.use('/ai',         aiRoutes);
 
-// 8. MongoDB bağlantısı ve sunucu başlatma
+// 7. MongoDB bağlantısı ve sunucu başlatma
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('MongoDB bağlantısı başarılı');
