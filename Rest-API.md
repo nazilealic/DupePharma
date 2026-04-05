@@ -1,6 +1,6 @@
 # REST API Görev Dağılımı
 
-**REST API Adresi:** [api.yazmuh.com](https://dupepharma.onrender.com)
+**REST API Adresi:** [https://dupepharma.onrender.com](https://dupepharma.onrender.com)
 
 Bu dokümanda, proje ekibindeki her üyenin geliştirmekten sorumlu olduğu REST API metotları listelenmektedir.
 
