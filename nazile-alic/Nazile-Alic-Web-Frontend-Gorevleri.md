@@ -1,4 +1,4 @@
-#  Dupe Pharma - Web Frontend Görevleri
+#  Nazile Alıç'ın Web Frontend Görevleri
 
 ##  Front-end Test Videosu
 
