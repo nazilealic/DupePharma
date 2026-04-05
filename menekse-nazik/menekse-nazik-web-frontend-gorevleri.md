@@ -1,7 +1,7 @@
 
 # Menekşe Nazik'in Web Frontend Görevleri
 
-**Front-end Test Videosu:** https://youtu.be/hT2pw2x252A menese
+**Front-end Test Videosu:** https://youtu.be/hT2pw2x252A 
 
 ---
 
