@@ -1,8 +1,7 @@
 #  Nazile Alıç'ın Rest API Görevleri
 ## 📹 API Test Videosu
 
-Link: https://youtu.be/PtewUdxivgg?si=1eZ6lWbrD_9DCSWF
-
+Link: https://youtu.be/LTq5Asfes68?si=m0BiKCNnfX5t5xnQ
 ---
 
 ##  Authentication
