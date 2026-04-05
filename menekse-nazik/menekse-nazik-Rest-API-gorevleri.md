@@ -5,7 +5,7 @@
 
 ---
 
-## 16. Yorum Ekle
+## 1. Yorum Ekle
 
 * **Endpoint:** `POST /products/{productId}/reviews`
 * **Path Parameters:**
@@ -26,7 +26,7 @@
 
 ---
 
-## 17. Yorum Sil
+## 2. Yorum Sil
 
 * **Endpoint:** `DELETE /products/{productId}/reviews/{reviewId}`
 * **Path Parameters:**
@@ -39,7 +39,7 @@
 
 ---
 
-## 18. Yorumları Listele
+## 3. Yorumları Listele
 
 * **Endpoint:** `GET /products/{productId}/reviews`
 * **Path Parameters:**
@@ -61,7 +61,7 @@ GET /products/p101/reviews?page=1&limit=20
 
 ---
 
-## 19. Yorumu Güncelle
+## 4. Yorumu Güncelle
 
 * **Endpoint:** `PUT /products/{productId}/reviews/{reviewId}`
 * **Path Parameters:**
@@ -83,7 +83,7 @@ GET /products/p101/reviews?page=1&limit=20
 
 ---
 
-## 20. Ürünü Puanla
+## 5. Ürünü Puanla
 
 * **Endpoint:** `POST /products/{productId}/ratings`
 * **Path Parameters:**
@@ -103,7 +103,7 @@ GET /products/p101/reviews?page=1&limit=20
 
 ---
 
-## 21. Kullanıcı Girişi
+## 6. Kullanıcı Girişi
 
 * **Endpoint:** `POST /auth/login`
 
@@ -121,7 +121,7 @@ GET /products/p101/reviews?page=1&limit=20
 **Response:** `200 OK` — Giriş başarılı.
 
 
-## 22. Kullanıcı Çıkışı
+## 7. Kullanıcı Çıkışı
 
 * **Endpoint:** `POST /auth/logout`
 
