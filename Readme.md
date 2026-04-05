@@ -25,7 +25,7 @@ Muadil Ürün Öneri ve Bilgi Sistemi
 ## Proje Linkleri
 
 - **REST API Adresi:** ilerde güncelelencek
-- **Web Frontend Adresi:** ilerde güncelelencek
+- **Web Frontend Adresi:** dupe-pharma-vkej.vercel.app/
 
 ---
 
