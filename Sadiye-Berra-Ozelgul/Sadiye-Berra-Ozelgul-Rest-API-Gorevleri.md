@@ -1,8 +1,8 @@
 # Sadiye Berra Özelgül — REST API Test Raporu
 
 **Proje:** DupePharma API  
-**Backend (API):** `https://dupepharma.onrender.com`  
-**Frontend (Web Sitesi):** `https://dupe-pharma-vkej.vercel.app/`  
+**Backend (API):** *https://dupepharma.onrender.com*  
+**Frontend (Web Sitesi):** *https://dupe-pharma-vkej.vercel.app/*
 **API Test Videosu:** *https://www.youtube.com/watch?v=PZrqPSt91mI*
 
 ---
