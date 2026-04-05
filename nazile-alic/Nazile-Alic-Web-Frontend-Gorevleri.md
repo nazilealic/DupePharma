@@ -2,7 +2,7 @@
 
 ##  Front-end Test Videosu
 
-Link: [Buraya video linki eklenecek](#)
+Link: https://youtu.be/V9rJFDdn1y4?si=ff6BmOD_Kl3ufkh3
 
 ---
 
