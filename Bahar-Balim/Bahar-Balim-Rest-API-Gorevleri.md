@@ -1,6 +1,6 @@
 Bahar Balım'ın REST API Metotları
 
-API Test Videosu: https://youtu.be/q4fH0qk1iWM
+API Test Videosu: https://youtu.be/_-ac5cYQsp0
 
 1. Üye Olma
 Endpoint: POST /auth/register
