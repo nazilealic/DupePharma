@@ -1,7 +1,7 @@
 # Bahar'ın Web Frontend Görevleri
 
 **Frontend (Web Sitesi):** https://dupe-pharma-vkej.vercel.app/  
-**Front-end Test Videosu:** *(Link buraya eklenecek)*
+**Front-end Test Videosu:** *https://youtu.be/KsTe1pOdWdw*
 
 ---
 
