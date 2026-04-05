@@ -8,9 +8,9 @@
 ## Grup Üyelerinin Web Frontend Görevleri
 
 1. [Nazile Alıç'ın Web Frontend Görevleri](nazile-alic/Nazile-Alic-Web-Frontend-Gorevleri.md)
-2. [Grup Üyesi 2'nin Web Frontend Görevleri](Sadiye-Berra-Ozelgul/Sadiye-Berra-Ozelgul-Frontend-Gorevleri.md)
-3. [Grup Üyesi 3'ün Web Frontend Görevleri](menekse-nazik/menekse-nazik-Frontend-Gorevleri.md)
-4. [Grup Üyesi 4'ün Web Frontend Görevleri](Bahar-Balim/Bahar-Balim-Frontend-Gorevleri.md)
+2. [Şadiye Berra Özelgül'ün Web Frontend Görevleri](Sadiye-Berra-Ozelgul/Sadiye-Berra-Ozelgul-Frontend-Gorevleri.md)
+3. [Menekşe Nazik'in Web Frontend Görevleri](menekse-nazik/menekse-nazik-Frontend-Gorevleri.md)
+4. [Bahar Balım'ın Web Frontend Görevleri](Bahar-Balim/Bahar-Balim-Frontend-Gorevleri.md)
 
 
 ---
