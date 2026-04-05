@@ -1,8 +1,7 @@
-#  Dupe Pharma - REST API Dokümantasyonu
-
+#  Nazile Alıç'ın Rest API Görevleri
 ## 📹 API Test Videosu
 
-Link: [Buraya video linki eklenecek](#)
+Link: https://youtu.be/PtewUdxivgg?si=1eZ6lWbrD_9DCSWF
 
 ---
 
