@@ -31,10 +31,7 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
@@ -52,10 +49,7 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
@@ -74,18 +68,31 @@
       "name": "Products",
       "item": [
         {
+          "name": "Ürün Ekle",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"CeraVe Nemlendirici Krem\",\n  \"brand\": \"CeraVe\",\n  \"category\": \"nemlendirici\",\n  \"price\": 450,\n  \"description\": \"Cildi yoğun şekilde nemlendiren krem.\",\n  \"ingredients\": [\"Hyaluronic Acid\", \"Ceramide\"],\n  \"usageInstructions\": \"Temiz cilde sabah ve akşam uygulayın.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
           "name": "Ürün Güncelle",
           "request": {
             "method": "PUT",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
@@ -103,10 +110,7 @@
           "request": {
             "method": "DELETE",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
               "raw": "{{baseUrl}}/admin/products/{{productId}}",
@@ -120,10 +124,7 @@
           "request": {
             "method": "GET",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
               "raw": "{{baseUrl}}/products/{{productId}}/details",
@@ -142,14 +143,8 @@
           "request": {
             "method": "POST",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "url": {
               "raw": "{{baseUrl}}/ai/product-analysis",
@@ -168,14 +163,8 @@
           "request": {
             "method": "PUT",
             "header": [
-              {
-                "key": "Authorization",
-                "value": "Bearer {{token}}"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
             ],
             "body": {
               "mode": "raw",
