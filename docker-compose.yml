@@ -13,7 +13,28 @@ services:
       - dupepharma_network
     restart: unless-stopped
 
-  # 2. REST API Kapsayıcısı
+  # 2. Redis Kapsayıcısı
+  redis_kapsayici:
+    image: redis:7.0
+    container_name: redis_kapsayici
+    ports:
+      - "6379:6379"
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+  # 3. RabbitMQ Kapsayıcısı
+  rabbitmq_kapsayici:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_kapsayici
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+  # 4. REST API Kapsayıcısı
   dupepharmaapi_kapsayici:
     build: ./api
     container_name: dupepharmaapi_kapsayici
@@ -27,13 +48,17 @@ services:
       - CLOUDINARY_CLOUD_NAME=dgpmqefyv
       - CLOUDINARY_API_KEY=733248899844245
       - CLOUDINARY_API_SECRET=k8ZAKmAkzSP3MP0RJxJT-AavLdM
+      - REDIS_URL=redis://redis_kapsayici:6379
+      - RABBITMQ_URL=amqp://rabbitmq_kapsayici
     depends_on:
       - mongodb_kapsayici
+      - redis_kapsayici
+      - rabbitmq_kapsayici
     networks:
       - dupepharma_network
     restart: unless-stopped
 
-  # 3. Front-End Kapsayıcısı
+  # 5. Front-End Kapsayıcısı
   dupepharma_kapsayici:
     build: ./dupepharma-frontend4
     container_name: dupepharma_kapsayici
