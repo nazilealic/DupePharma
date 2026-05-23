@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "DupePharma",
+    "slug": "dupepharma-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#2563EB"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dupepharma.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#2563EB"
+      },
+      "package": "com.dupepharma.mobile"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Nöbetçi eczane listesi yüklemek için galeri erişimi gerekli."
+        }
+      ]
+    ]
+  }
+}
