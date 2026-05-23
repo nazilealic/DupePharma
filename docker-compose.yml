@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-
   # 1. MongoDB Kapsayıcısı
   mongodb_kapsayici:
     image: mongo:6.0
@@ -33,12 +32,12 @@ services:
 
   # 3. Front-End Kapsayıcısı
   dupepharma_kapsayici:
-    build: ./dupepharma-frontend2
+    build: ./dupepharma-frontend4
     container_name: dupepharma_kapsayici
     ports:
       - "3001:3001"
     environment:
-      - REACT_APP_API_URL=http://dupepharmaapi_kapsayici:3000
+      - REACT_APP_API_URL=http://localhost:3000
     depends_on:
       - dupepharmaapi_kapsayici
     networks:
