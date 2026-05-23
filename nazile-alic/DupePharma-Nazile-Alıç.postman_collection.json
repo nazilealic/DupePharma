@@ -1,0 +1,390 @@
+{
+  "info": {
+    "_postman_id": "812ae2f4-f082-409d-a559-0b2a7a94c14a",
+    "name": "DupePharma-Nazile-Alıç",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47307664",
+    "_collection_link": "https://go.postman.co/collection/47307664-812ae2f4-f082-409d-a559-0b2a7a94c14a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Ürün Oluşturma",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2ZjNjMxOGRhYzVmZTM0ODNmMWQ4YSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzU0MTI1NjksImV4cCI6MTc3NTQxNjE2OX0.ggTH1B7HtLP8KU_4lXqLRF36apwtFXResZFMPcmcgKc",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Nivea Soft Nemlendirici Krem\",\r\n  \"brand\": \"Nivea\",\r\n  \"category\": \"nemlendirici\",\r\n  \"price\": 200.00,\r\n  \"volume\": \"200 ml\",\r\n  \"pricePerMl\": 1.0,\r\n  \"description\": \"Hafif yapılı, hızlı emilen formülüyle cildi derinlemesine nemlendiren çok amaçlı krem.\",\r\n  \"ingredients\": [\"Aqua\", \"Glycerin\", \"Paraffinum Liquidum\", \"Myristyl Myristate\", \"Alcohol Denat.\", \"Panthenol\", \"Tocopheryl Acetate\", \"Helianthus Annuus Seed Oil\"],\r\n  \"usageInstructions\": \"Temiz cilde nazikçe masaj yaparak uygulayın. Günlük kullanıma uygundur.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/products",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ürünleri Listeleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2ZjNjMxOGRhYzVmZTM0ODNmMWQ4YSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzU0MTI1NjksImV4cCI6MTc3NTQxNjE2OX0.ggTH1B7HtLP8KU_4lXqLRF36apwtFXResZFMPcmcgKc",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/products",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "products"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ürün Silme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2ZjNjMxOGRhYzVmZTM0ODNmMWQ4YSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzU0MTI1NjksImV4cCI6MTc3NTQxNjE2OX0.ggTH1B7HtLP8KU_4lXqLRF36apwtFXResZFMPcmcgKc",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/products/69d2a86d6594e6681624e609",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "products",
+            "69d2a86d6594e6681624e609"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Muail Ürünleri Listeleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkMGQ2YTk0OTc2ZjcxYjc0OTdiNSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ3MDMzNjMsImV4cCI6MTc3NDcwNjk2M30.EEkEMIw1nP6EDsXOE-hFElc2ke21JUBlfLmoE_OalpQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/products/69c7b7350a9b4dd83a0ea7d2/alternatives",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "products",
+            "69c7b7350a9b4dd83a0ea7d2",
+            "alternatives"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Muadil Ürünler İçin Fiyat Karşılaştırması",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkMGQ2YTk0OTc2ZjcxYjc0OTdiNSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ3MDMzNjMsImV4cCI6MTc3NDcwNjk2M30.EEkEMIw1nP6EDsXOE-hFElc2ke21JUBlfLmoE_OalpQ",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/products/69c7b7350a9b4dd83a0ea7d2/price-comparison",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "products",
+            "69c7b7350a9b4dd83a0ea7d2",
+            "price-comparison"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Kullanıcı Ürün Araması Yapma",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2ZjNjMxOGRhYzVmZTM0ODNmMWQ4YSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzUyMzAxNjAsImV4cCI6MTc3NTIzMzc2MH0.TUvkLBgkUGcr2Obgm48_hnusVao0zEXTOREQx7kJ0eo",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/products/search?query=biox",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "products",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "query",
+              "value": "biox"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Kullanıcının Geçmişini Görüntüleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkMGQ2YTk0OTc2ZjcxYjc0OTdiNSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ3Mjc2MTksImV4cCI6MTc3NDczMTIxOX0.LhRn2RZ0gXr_2JGc-1gQ8DuSJuOD6EfJRtP45Crh7Ro",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/users/69c7d0d6a94976f71b7497b5/search-history",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "users",
+            "69c7d0d6a94976f71b7497b5",
+            "search-history"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Kullanıcının Geçmişini Silme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkMGQ2YTk0OTc2ZjcxYjc0OTdiNSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ3Mjc2MTksImV4cCI6MTc3NDczMTIxOX0.LhRn2RZ0gXr_2JGc-1gQ8DuSJuOD6EfJRtP45Crh7Ro",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/users/69c7d0d6a94976f71b7497b5/search-history",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "users",
+            "69c7d0d6a94976f71b7497b5",
+            "search-history"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Kullanıcının Cilt Profilini Oluşturma",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkMGQ2YTk0OTc2ZjcxYjc0OTdiNSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ3MjU0NjcsImV4cCI6MTc3NDcyOTA2N30.3gBMTMsdO7-I6Uyde7jN36WEdKcTqoDLDacVKzjiO1o",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skinType\": \"karma\",\r\n  \"sensitivity\": true,\r\n  \"concerns\": [\"akne\", \"lekeler\"]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/users/69c7d0d6a94976f71b7497b5/skin-profile",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "users",
+            "69c7d0d6a94976f71b7497b5",
+            "skin-profile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Kullanıcı Cilt Profili Güncelleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkMGQ2YTk0OTc2ZjcxYjc0OTdiNSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ3MjU0NjcsImV4cCI6MTc3NDcyOTA2N30.3gBMTMsdO7-I6Uyde7jN36WEdKcTqoDLDacVKzjiO1o",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"skinType\": \"karma\",\r\n  \"sensitivity\": true,\r\n  \"concerns\": [\"akne\", \"lekeler\"]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://dupepharma.onrender.com/users/69c7d0d6a94976f71b7497b5/skin-profile",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "users",
+            "69c7d0d6a94976f71b7497b5",
+            "skin-profile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Kullanıcı Cilt Profili Görüntüleme",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5YzdkMGQ2YTk0OTc2ZjcxYjc0OTdiNSIsImVtYWlsIjoibmF6aWxlYWxpY0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NzQ3MjU0NjcsImV4cCI6MTc3NDcyOTA2N30.3gBMTMsdO7-I6Uyde7jN36WEdKcTqoDLDacVKzjiO1o",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://dupepharma.onrender.com/users/69c7d0d6a94976f71b7497b5/skin-profile",
+          "protocol": "https",
+          "host": [
+            "dupepharma",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "users",
+            "69c7d0d6a94976f71b7497b5",
+            "skin-profile"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

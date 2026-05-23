@@ -5,7 +5,7 @@
 
 ## Proje Hakkında
 
-![Ürün Tanıtım Görseli](web.png)
+![Ürün Tanıtım Görseli](dupepharma.png)
 
 **Proje Tanımı:** 
 
@@ -25,7 +25,7 @@ Muadil Ürün Öneri ve Bilgi Sistemi
 ## Proje Linkleri
 
 - **REST API Adresi:** ilerde güncelelencek
-- **Web Frontend Adresi:** ilerde güncelelencek
+- **Web Frontend Adresi:** https://dupe-pharma-vkej.vercel.app/
 
 ---
 

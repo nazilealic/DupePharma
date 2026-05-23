@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  # 1. MongoDB Kapsayıcısı
+  mongodb_kapsayici:
+    image: mongo:6.0
+    container_name: mongodb_kapsayici
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+  # 2. Redis Kapsayıcısı
+  redis_kapsayici:
+    image: redis:7.0
+    container_name: redis_kapsayici
+    ports:
+      - "6379:6379"
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+  # 3. RabbitMQ Kapsayıcısı
+  rabbitmq_kapsayici:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_kapsayici
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+  # 4. REST API Kapsayıcısı
+  dupepharmaapi_kapsayici:
+    build: ./api
+    container_name: dupepharmaapi_kapsayici
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGODB_URI=mongodb+srv://alicnazilee_db_user:1907db1907@clusterdp.pqzknua.mongodb.net/dupepharma
+      - JWT_SECRET=supersecretkey
+      - JWT_EXPIRES_IN=3600
+      - CLOUDINARY_CLOUD_NAME=dgpmqefyv
+      - CLOUDINARY_API_KEY=733248899844245
+      - CLOUDINARY_API_SECRET=k8ZAKmAkzSP3MP0RJxJT-AavLdM
+      - REDIS_URL=redis://redis_kapsayici:6379
+      - RABBITMQ_URL=amqp://rabbitmq_kapsayici
+    depends_on:
+      - mongodb_kapsayici
+      - redis_kapsayici
+      - rabbitmq_kapsayici
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+  # 5. Front-End Kapsayıcısı
+  dupepharma_kapsayici:
+    build: ./dupepharma-frontend4
+    container_name: dupepharma_kapsayici
+    ports:
+      - "3001:3001"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3000
+    depends_on:
+      - dupepharmaapi_kapsayici
+    networks:
+      - dupepharma_network
+    restart: unless-stopped
+
+networks:
+  dupepharma_network:
+    driver: bridge
+
+volumes:
+  mongo_data:

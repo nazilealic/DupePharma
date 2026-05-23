@@ -1,19 +1,17 @@
 # Web Frontend Görev Dağılımı
 
-**Web Frontend Adresi:** [frontend.yazmuh.com](https://frontend.yazmuh.com)
+**Web Frontend Adresi:**  https://dupe-pharma-vkej.vercel.app/
 
-Bu dokümanda, web uygulamasının kullanıcı arayüzü (UI) ve kullanıcı deneyimi (UX) görevleri listelenmektedir. Her grup üyesi, kendisine atanan sayfaların tasarımı, implementasyonu ve kullanıcı etkileşimlerinden sorumludur.
 
 ---
 
 ## Grup Üyelerinin Web Frontend Görevleri
 
-1. [Ali Tutar'ın Web Frontend Görevleri](Ali-Tutar/Ali-Tutar-Web-Frontend-Gorevleri.md)
-2. [Grup Üyesi 2'nin Web Frontend Görevleri](Grup-Uyesi-2/Grup-Uyesi-2-Frontend-Gorevleri.md)
-3. [Grup Üyesi 3'ün Web Frontend Görevleri](Grup-Uyesi-3/Grup-Uyesi-3-Frontend-Gorevleri.md)
-4. [Grup Üyesi 4'ün Web Frontend Görevleri](Grup-Uyesi-4/Grup-Uyesi-4-Frontend-Gorevleri.md)
-5. [Grup Üyesi 5'in Web Frontend Görevleri](Grup-Uyesi-5/Grup-Uyesi-5-Frontend-Gorevleri.md)
-6. [Grup Üyesi 6'nın Web Frontend Görevleri](Grup-Uyesi-6/Grup-Uyesi-6-Frontend-Gorevleri.md)
+1. [Nazile Alıç'ın Web Frontend Görevleri](nazile-alic/Nazile-Alic-Web-Frontend-Gorevleri.md)
+2. [Şadiye Berra Özelgül'ün Web Frontend Görevleri](Sadiye-Berra-Ozelgul/Sadiye-Berra-Ozelgul-Frontend-Gorevleri.md)
+3. [Menekşe Nazik'in Web Frontend Görevleri](menekse-nazik/menekse-nazik-Frontend-Gorevleri.md)
+4. [Bahar Balım'ın Web Frontend Görevleri](Bahar-Balim/Bahar-Balim-Frontend-Gorevleri.md)
+
 
 ---
 

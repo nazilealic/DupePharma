@@ -2,7 +2,7 @@
 
 ## Sunum Videosu
 
-> **Video Linki:** [Sunum videosu linki buraya eklenecek](https://example.com)
+> **Video Linki:** [Sunum videosu linki buraya eklenecek](https://youtube.com/@dupepharma-r4b?si=8ZZtrsmvSMB-QSVY)
 
 ---
 
