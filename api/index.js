@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const redis = require('redis');
+const amqp = require('amqplib');
 require('dotenv').config();
 
 const app = express();
@@ -49,12 +51,49 @@ app.use(express.json());
 const path = require('path');
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// 5. UptimeRobot için health check endpoint
+// 5. Redis bağlantısı
+let redisClient;
+async function connectRedis() {
+  try {
+    redisClient = redis.createClient({
+      url: process.env.REDIS_URL || 'redis://redis_kapsayici:6379'
+    });
+    redisClient.on('error', (err) => console.log('Redis Hatası:', err));
+    await redisClient.connect();
+    console.log('Redis bağlantısı başarılı');
+  } catch (err) {
+    console.error('Redis bağlantı hatası:', err);
+  }
+}
+connectRedis();
+
+// 6. RabbitMQ bağlantısı
+let rabbitChannel;
+async function connectRabbitMQ() {
+  try {
+    const connection = await amqp.connect(process.env.RABBITMQ_URL || 'amqp://rabbitmq_kapsayici');
+    rabbitChannel = await connection.createChannel();
+    await rabbitChannel.assertQueue('dupepharma_queue', { durable: true });
+    console.log('RabbitMQ bağlantısı başarılı');
+  } catch (err) {
+    console.error('RabbitMQ bağlantı hatası:', err);
+  }
+}
+connectRabbitMQ();
+
+// Redis ve RabbitMQ'yu route'larda kullanmak için app'e ekle
+app.use((req, res, next) => {
+  req.redisClient = redisClient;
+  req.rabbitChannel = rabbitChannel;
+  next();
+});
+
+// 7. Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// 6. Route'lar
+// 8. Route'lar
 const authRoutes          = require('./routes/auth');
 const productRoutes       = require('./routes/products');
 const alternativeRoutes   = require('./routes/alternatives');
@@ -77,14 +116,14 @@ app.use('/pharmacies', pharmacyRoutes);
 app.use('/admin',      adminRoutes);
 app.use('/ai',         aiRoutes);
 
-// 7. MongoDB bağlantısı ve sunucu başlatma
+// 9. MongoDB bağlantısı ve sunucu başlatma
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('MongoDB bağlantısı başarılı');
-    const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-  console.log(`Sunucu ${PORT} portunda çalışıyor`);
-});
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Sunucu ${PORT} portunda çalışıyor`);
+    });
   })
   .catch(err => console.error('MongoDB bağlantı hatası:', err));
 
