@@ -6,19 +6,20 @@ import { Text, View } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import { COLORS } from '../components/theme';
 
-import LoginScreen      from '../screens/LoginScreen';
-import RegisterScreen   from '../screens/RegisterScreen';
-import ProductsScreen   from '../screens/ProductsScreen';
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import ProductsScreen from '../screens/ProductsScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
-import FavoritesScreen  from '../screens/FavoritesScreen';
+import FavoritesScreen from '../screens/FavoritesScreen';
 import SkinProfileScreen from '../screens/SkinProfileScreen';
-import PharmacyScreen   from '../screens/PharmacyScreen';
-import ReviewsScreen    from '../screens/ReviewsScreen';
-import ProfileScreen    from '../screens/ProfileScreen';
-import AdminScreen      from '../screens/AdminScreen';
+import PharmacyScreen from '../screens/PharmacyScreen';
+import ReviewsScreen from '../screens/ReviewsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import AdminScreen from '../screens/AdminScreen';
+import SearchHistoryScreen from '../screens/SearchHistoryScreen';
 
 const Stack = createNativeStackNavigator();
-const Tab   = createBottomTabNavigator();
+const Tab = createBottomTabNavigator();
 
 function TabIcon({ emoji, focused }) {
   return (
@@ -48,7 +49,7 @@ function MainTabs() {
         name="Products"
         component={ProductsScreen}
         options={{
-          title: 'Ürünler',
+          title: 'Urunler',
           tabBarIcon: ({ focused }) => <TabIcon emoji="💊" focused={focused} />,
         }}
       />
@@ -58,6 +59,14 @@ function MainTabs() {
         options={{
           title: 'Favoriler',
           tabBarIcon: ({ focused }) => <TabIcon emoji="♥" focused={focused} />,
+        }}
+      />
+      <Tab.Screen
+        name="SearchHistory"
+        component={SearchHistoryScreen}
+        options={{
+          title: 'Gecmis',
+          tabBarIcon: ({ focused }) => <TabIcon emoji="🕐" focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -88,7 +97,6 @@ function MainTabs() {
   );
 }
 
-// Auth navigator (giriş yapılmamışken)
 function AuthStack() {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -98,7 +106,6 @@ function AuthStack() {
   );
 }
 
-// Ana navigator (giriş yapıldıktan sonra)
 function AppStack() {
   const { isAdmin } = useAuth();
   return (
@@ -120,7 +127,7 @@ function AppStack() {
         name="ProductDetail"
         component={ProductDetailScreen}
         options={({ route }) => ({
-          title: route.params?.name || 'Ürün Detayı',
+          title: route.params?.name || 'Urun Detayi',
           headerShown: true,
         })}
       />
@@ -136,7 +143,7 @@ function AppStack() {
         <Stack.Screen
           name="Admin"
           component={AdminScreen}
-          options={{ title: '⚙️ Admin Paneli', headerShown: true }}
+          options={{ title: 'Admin Paneli', headerShown: true }}
         />
       )}
     </Stack.Navigator>

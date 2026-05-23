@@ -173,9 +173,14 @@ const api = {
     const res = await fetch(`${BASE_URL}/products/${productId}/reviews`, {
       method: 'POST',
       headers,
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        ...data,
+        comment: data.body || data.comment,
+      }),
     });
-    return res.json();
+    const result = await res.json();
+    console.log('createReview response:', JSON.stringify(result));
+    return result;
   },
 
   updateReview: async (productId, reviewId, data) => {
